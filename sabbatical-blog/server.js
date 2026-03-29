@@ -178,7 +178,40 @@ app.post('/api/upload/:wall', upload.single('photo'), async (req, res) => {
   }
 });
 
-// PATCH update caption
+// POST create blog post
+app.post('/api/posts', (req, res) => {
+  const { title, body } = req.body;
+  if (!title || !body) return res.status(400).json({ error: 'title and body required' });
+
+  const post = { id: uuidv4(), title, body, createdAt: new Date().toISOString() };
+  const posts = readData(DATA.posts);
+  posts.unshift(post);
+  writeData(DATA.posts, posts);
+  res.json(post);
+});
+
+// PATCH update blog post  (must come before generic /api/:wall/:id)
+app.patch('/api/posts/:id', (req, res) => {
+  const posts = readData(DATA.posts);
+  const post = posts.find(p => p.id === req.params.id);
+  if (!post) return res.status(404).json({ error: 'Not found' });
+
+  if (req.body.title !== undefined) post.title = req.body.title;
+  if (req.body.body  !== undefined) post.body  = req.body.body;
+  post.updatedAt = new Date().toISOString();
+  writeData(DATA.posts, posts);
+  res.json(post);
+});
+
+// DELETE blog post  (must come before generic /api/:wall/:id)
+app.delete('/api/posts/:id', (req, res) => {
+  const posts = readData(DATA.posts);
+  if (!posts.find(p => p.id === req.params.id)) return res.status(404).json({ error: 'Not found' });
+  writeData(DATA.posts, posts.filter(p => p.id !== req.params.id));
+  res.json({ ok: true });
+});
+
+// PATCH update photo caption  (generic — must come after /api/posts/:id)
 app.patch('/api/:wall/:id', (req, res) => {
   const { wall, id } = req.params;
   if (!['photos', 'prints'].includes(wall)) return res.status(400).json({ error: 'Invalid wall' });
@@ -192,7 +225,7 @@ app.patch('/api/:wall/:id', (req, res) => {
   res.json(item);
 });
 
-// DELETE photo
+// DELETE photo  (generic — must come after /api/posts/:id)
 app.delete('/api/:wall/:id', (req, res) => {
   const { wall, id } = req.params;
   if (!['photos', 'prints'].includes(wall)) return res.status(400).json({ error: 'Invalid wall' });
@@ -208,39 +241,6 @@ app.delete('/api/:wall/:id', (req, res) => {
   });
 
   writeData(DATA[wall], data.filter(x => x.id !== id));
-  res.json({ ok: true });
-});
-
-// POST create blog post
-app.post('/api/posts', (req, res) => {
-  const { title, body } = req.body;
-  if (!title || !body) return res.status(400).json({ error: 'title and body required' });
-
-  const post = { id: uuidv4(), title, body, createdAt: new Date().toISOString() };
-  const posts = readData(DATA.posts);
-  posts.unshift(post);
-  writeData(DATA.posts, posts);
-  res.json(post);
-});
-
-// PATCH update blog post
-app.patch('/api/posts/:id', (req, res) => {
-  const posts = readData(DATA.posts);
-  const post = posts.find(p => p.id === req.params.id);
-  if (!post) return res.status(404).json({ error: 'Not found' });
-
-  if (req.body.title !== undefined) post.title = req.body.title;
-  if (req.body.body  !== undefined) post.body  = req.body.body;
-  post.updatedAt = new Date().toISOString();
-  writeData(DATA.posts, posts);
-  res.json(post);
-});
-
-// DELETE blog post
-app.delete('/api/posts/:id', (req, res) => {
-  const posts = readData(DATA.posts);
-  if (!posts.find(p => p.id === req.params.id)) return res.status(404).json({ error: 'Not found' });
-  writeData(DATA.posts, posts.filter(p => p.id !== req.params.id));
   res.json({ ok: true });
 });
 
