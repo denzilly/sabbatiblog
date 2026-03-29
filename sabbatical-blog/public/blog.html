@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B — Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav-logo">B</a>
+    <ul class="nav-links">
+      <li><a href="/blog" class="active">Blog</a></li>
+      <li><a href="/prints">3D Prints</a></li>
+    </ul>
+    <a href="/admin" class="nav-admin-link">admin</a>
+  </nav>
+
+  <!-- Blog list view -->
+  <main id="blog-list" class="page-content" style="display:none">
+    <p class="page-title">Journal</p>
+    <div id="post-list" class="post-list"></div>
+  </main>
+
+  <!-- Single post view -->
+  <article id="blog-post" class="page-content post-full" style="display:none">
+    <a href="/blog" class="back-link" id="back-btn">&#x2190; Journal</a>
+    <p class="post-meta" id="post-date"></p>
+    <h1 class="post-title" id="post-title"></h1>
+    <div class="post-body" id="post-body"></div>
+  </article>
+
+  <script src="/js/blog.js"></script>
+</body>
+</html>

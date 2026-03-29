@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #1a1814;
+      --paper:  #f5f0e8;
+      --accent: #c44d2a;
+      --muted:  #7a7268;
+      --border: rgba(245,240,232,0.1);
+      --surface: rgba(245,240,232,0.04);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: var(--ink);
+      color: var(--paper);
+      min-height: 100dvh;
+      padding-bottom: 4rem;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      background: var(--ink);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1rem;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .header-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .header-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      color: var(--paper);
+      text-decoration: none;
+    }
+
+    .logout-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .logout-btn:hover { color: var(--paper); }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .tab.active {
+      color: var(--paper);
+      border-bottom-color: var(--paper);
+    }
+
+    /* ── Panels ── */
+    .panel { display: none; padding: 1.5rem 1rem; }
+    .panel.active { display: block; }
+
+    /* ── Form elements ── */
+    label {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--paper);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      padding: 0.75rem;
+      outline: none;
+      border-radius: 2px;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--muted);
+    }
+
+    textarea {
+      min-height: 180px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    select {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    select option { background: #2a2722; }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--paper);
+    }
+
+    .btn-primary:hover { background: #e8e3d8; }
+
+    .btn-secondary {
+      background: none;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover { border-color: var(--muted); color: var(--paper); }
+
+    .btn-danger {
+      background: none;
+      color: var(--accent);
+      border: 1px solid rgba(196,77,42,0.3);
+    }
+
+    .btn-danger:hover { border-color: var(--accent); }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ── Upload drop zone ── */
+    .dropzone {
+      border: 1px dashed var(--border);
+      border-radius: 2px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: var(--muted);
+      background: var(--surface);
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: none;
+      background: none;
+    }
+
+    .dropzone-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .dropzone-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .dropzone-preview img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 2px;
+      opacity: 0.8;
+    }
+
+    /* ── Manage list ── */
+    .manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .manage-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .manage-item:last-child { border-bottom: none; }
+
+    .manage-thumb {
+      width: 64px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .manage-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .manage-caption {
+      font-size: 0.9rem;
+      color: var(--paper);
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .manage-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    .manage-actions {
+      display: flex;
+      gap: 0.4rem;
+      flex-shrink: 0;
+    }
+
+    .manage-actions .btn {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.55rem;
+    }
+
+    /* ── Post list in manage ── */
+    .post-manage-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-manage-title {
+      font-size: 1rem;
+      color: var(--paper);
+      margin-bottom: 0.2rem;
+    }
+
+    .post-manage-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .post-manage-actions {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .post-manage-actions .btn {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.55rem;
+    }
+
+    /* ── Edit inline ── */
+    .edit-inline {
+      display: none;
+      margin-top: 0.75rem;
+    }
+
+    .edit-inline.open { display: block; }
+
+    .edit-inline textarea,
+    .edit-inline input {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Feedback ── */
+    .feedback {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      padding: 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .feedback.success {
+      background: rgba(100,200,100,0.1);
+      border: 1px solid rgba(100,200,100,0.2);
+      color: #90d890;
+      display: block;
+    }
+
+    .feedback.error {
+      background: rgba(196,77,42,0.1);
+      border: 1px solid rgba(196,77,42,0.3);
+      color: var(--accent);
+      display: block;
+    }
+
+    /* ── Upload progress ── */
+    .upload-progress {
+      display: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .upload-progress.active { display: block; }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wall-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wall-tab {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .wall-tab.active { color: var(--paper); border-bottom-color: var(--paper); }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/" class="header-logo">B</a>
+  <span class="header-title">Admin</span>
+  <a href="/logout" class="logout-btn">Log out</a>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="upload">Upload</button>
+  <button class="tab" data-tab="post">New Post</button>
+  <button class="tab" data-tab="manage">Manage</button>
+</div>
+
+<!-- ── UPLOAD TAB ─────────────────────────────────────────────────────────── -->
+<section id="tab-upload" class="panel active">
+  <div id="upload-feedback" class="feedback"></div>
+
+  <div class="form-group">
+    <label>Add to wall</label>
+    <select id="upload-wall">
+      <option value="photos">Sabbatical Photos</option>
+      <option value="prints">3D Prints</option>
+    </select>
+  </div>
+
+  <div class="dropzone" id="dropzone">
+    <input type="file" id="file-input" accept="image/*" multiple>
+    <p class="dropzone-text">Tap to select photos</p>
+    <div class="dropzone-preview" id="drop-preview"></div>
+  </div>
+
+  <div class="form-group">
+    <label>Caption <span style="opacity:0.5;font-size:0.55rem">(applies to all selected photos)</span></label>
+    <input type="text" id="upload-caption" placeholder="Optional caption…">
+  </div>
+
+  <button class="btn btn-primary" id="upload-btn" disabled>Upload</button>
+  <div class="upload-progress" id="upload-progress">Uploading…</div>
+</section>
+
+<!-- ── NEW POST TAB ───────────────────────────────────────────────────────── -->
+<section id="tab-post" class="panel">
+  <div id="post-feedback" class="feedback"></div>
+
+  <div class="form-group">
+    <label>Title</label>
+    <input type="text" id="post-title" placeholder="Post title…">
+  </div>
+
+  <div class="form-group">
+    <label>Body <span style="opacity:0.5;font-size:0.55rem">(double newline = new paragraph)</span></label>
+    <textarea id="post-body" placeholder="Write your post…"></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="post-btn">Publish</button>
+</section>
+
+<!-- ── MANAGE TAB ─────────────────────────────────────────────────────────── -->
+<section id="tab-manage" class="panel">
+  <div class="wall-tabs">
+    <button class="wall-tab active" data-wall="photos">Sabbatical</button>
+    <button class="wall-tab" data-wall="prints">3D Prints</button>
+    <button class="wall-tab" data-wall="posts">Blog Posts</button>
+  </div>
+
+  <div id="manage-photos" class="manage-section">
+    <p class="section-heading">Sabbatical Photos</p>
+    <div id="photos-list" class="manage-list"></div>
+  </div>
+
+  <div id="manage-prints" class="manage-section" style="display:none">
+    <p class="section-heading">3D Prints</p>
+    <div id="prints-list" class="manage-list"></div>
+  </div>
+
+  <div id="manage-posts" class="manage-section" style="display:none">
+    <p class="section-heading">Blog Posts</p>
+    <div id="posts-list" class="manage-list"></div>
+  </div>
+</section>
+
+<script src="/admin/admin.js"></script>
+</body>
+</html>

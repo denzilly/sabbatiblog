@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tohoku — May · June</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1814;
+    --paper: #f5f0e8;
+    --accent: #c44d2a;
+    --muted: #7a7268;
+    --border: #d8d0c4;
+    --card-bg: #fdfaf5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    background: #0d0c09;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.55;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: #c8bfb0;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-weight: 300;
+    color: #f5f0e8;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: #e8d5b0;
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: #b0a898;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-date {
+    margin-top: 2.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #8a8278;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, #8a8278);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── NAV STRIP ── */
+  .nav-strip {
+    background: var(--ink);
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-strip::-webkit-scrollbar { display: none; }
+
+  .nav-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6a6460;
+    padding: 1rem 1.2rem;
+    white-space: nowrap;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-item:hover { color: #c8bfb0; border-bottom-color: var(--accent); }
+
+  .nav-num {
+    color: var(--accent);
+    font-size: 0.55rem;
+  }
+
+  /* ── INTRO ── */
+  .intro {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+  }
+
+  .intro p {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #3a3530;
+  }
+
+  .intro strong {
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  /* ── SECTION ── */
+  .stop {
+    padding: 0 0 6rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .stop.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .stop-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .stop-inner.reverse { direction: rtl; }
+  .stop-inner.reverse > * { direction: ltr; }
+
+  .stop-inner.full {
+    grid-template-columns: 1fr;
+    max-width: 760px;
+  }
+
+  .stop-header {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .stop-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+  }
+
+  .stop-days {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .stop h2 {
+    font-size: 2.6rem;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  .stop h2 em { font-style: italic; }
+
+  .stop-region {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .stop p {
+    font-size: 1.1rem;
+    color: #3a3530;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .tag.hot {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .note {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    border-left: 2px solid var(--accent);
+    font-size: 0.95rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── IMAGES ── */
+  .img-block {
+    position: relative;
+  }
+
+  .img-primary {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .img-stack img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-stack .wide {
+    grid-column: span 2;
+    aspect-ratio: 16/7;
+  }
+
+  .img-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    max-width: 1100px;
+    margin: 0 auto 5rem;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider-mark {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--border);
+    letter-spacing: 0.2em;
+  }
+
+  /* ── TIMELINE STRIP ── */
+  .timeline {
+    background: var(--ink);
+    padding: 4rem 2rem;
+    margin-bottom: 5rem;
+  }
+
+  .timeline-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .timeline-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: #6a6460;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .tl-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .tl-row::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    right: 5%;
+    height: 1px;
+    background: #3a3530;
+  }
+
+  .tl-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    padding-top: 0;
+  }
+
+  .tl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .tl-dot.gray { background: #3a3530; }
+
+  .tl-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.52rem;
+    color: #6a6460;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .tl-days {
+    font-size: 0.65rem;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 4rem 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--border);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .stop-inner { grid-template-columns: 1fr; }
+    .stop-inner.reverse { direction: ltr; }
+    .tl-row { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .tl-row::before { display: none; }
+    .stop h2 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">A journey through Japan's quiet north</p>
+    <h1>Tō<em>hoku</em></h1>
+    <p class="hero-sub">Sacred mountains, forest onsen, and the wild Aomori coast</p>
+    <p class="hero-date">May 21 — June 13, 2026</p>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav-strip">
+  <a class="nav-item" href="#sendai"><span class="nav-num">01</span>Sendai</a>
+  <a class="nav-item" href="#matsushima"><span class="nav-num">02</span>Matsushima</a>
+  <a class="nav-item" href="#dewa"><span class="nav-num">03</span>Dewa Sanzan</a>
+  <a class="nav-item" href="#nyuto"><span class="nav-num">04</span>Nyuto Onsen</a>
+  <a class="nav-item" href="#tazawa"><span class="nav-num">05</span>Tazawa &amp; Kakunodate</a>
+  <a class="nav-item" href="#oirase"><span class="nav-num">06</span>Oirase Gorge</a>
+  <a class="nav-item" href="#hakkoda"><span class="nav-num">07</span>Mt Hakkoda</a>
+  <a class="nav-item" href="#aomori"><span class="nav-num">08</span>Aomori &amp; Hirosaki</a>
+</nav>
+
+<!-- INTRO -->
+<div class="intro">
+  <p>Twenty-three days in Japan's forgotten north. No Shinkansen crowds, no queues at dawn. Just cedar forests older than the Edo period, onsen carved out of volcanic rock, and coastline that still feels like a discovery. <strong>Late May into June</strong> is arguably the finest time — the mountains have just shaken off their snow, the beech forests burn vivid green, and the tourist masses are still weeks away.</p>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="timeline-inner">
+    <p class="timeline-title">Journey overview · 23 days</p>
+    <div class="tl-row">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D1–2</div>
+        <div class="tl-label">Sendai</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D3–4</div>
+        <div class="tl-label">Matsushima</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D5–8</div>
+        <div class="tl-label">Dewa Sanzan</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D9–11</div>
+        <div class="tl-label">Nyuto Onsen</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D12–13</div>
+        <div class="tl-label">Tazawa &amp; Kakunodate</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D14–18</div>
+        <div class="tl-label">Oirase &amp; Hakkoda</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days">D19–23</div>
+        <div class="tl-label">Aomori &amp; Hirosaki</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 01 SENDAI -->
+<section class="stop" id="sendai">
+  <div class="stop-inner">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">01 ·</span>
+        <span class="stop-days">Days 1–2</span>
+      </div>
+      <h2>Sen<em>dai</em></h2>
+      <p class="stop-region">Miyagi Prefecture · Gateway city</p>
+      <p>The obvious entry point from China — direct or one-stop flights into Sendai Airport. Use these two days to decompress and reset timezones before the real journey begins.</p>
+      <p>The Zuihoden mausoleum, a baroque-era monument to feudal lord Date Masamune, is worth a morning. The Kokubuncho district is the best street-food and craft sake corridor in the city.</p>
+      <div class="tags">
+        <span class="tag">City base</span>
+        <span class="tag">Zuihoden mausoleum</span>
+        <span class="tag">Kokubuncho food street</span>
+        <span class="tag">Craft sake</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <img class="img-primary" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1000&auto=format&fit=crop" alt="Japanese shrine cedar forest Sendai">
+      <p class="img-caption">Zuihoden mausoleum · Sendai</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 02 MATSUSHIMA -->
+<section class="stop" id="matsushima">
+  <div class="stop-inner reverse">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">02 ·</span>
+        <span class="stop-days">Days 3–4</span>
+      </div>
+      <h2>Matsu<em>shima</em></h2>
+      <p class="stop-region">Miyagi Prefecture · One of Japan's Three Views</p>
+      <p>A bay scattered with 260 pine-topped islands, classified alongside Miyajima and Amanohashidate as one of Japan's three most celebrated views. The boat cruise between the islands at golden hour is quietly spectacular.</p>
+      <p>Zuiganji temple — rebuilt in 1609 by Date Masamune — sits directly on the waterfront. The cave corridors carved into the cliff behind it are strange and worth the detour.</p>
+      <div class="tags">
+        <span class="tag">Boat cruise</span>
+        <span class="tag">Zuiganji temple</span>
+        <span class="tag">Easy day trip from Sendai</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <img class="img-primary" src="https://images.unsplash.com/photo-1480796927426-f609979314bd?w=1000&auto=format&fit=crop" alt="Matsushima bay Japan">
+      <p class="img-caption">Matsushima Bay · Miyagi</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 03 DEWA SANZAN -->
+<section class="stop" id="dewa">
+  <div class="stop-inner">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">03 ·</span>
+        <span class="stop-days">Days 5–8</span>
+      </div>
+      <h2>Dewa <em>Sanzan</em></h2>
+      <p class="stop-region">Yamagata Prefecture · Sacred mountains</p>
+      <p>Three mountains representing birth, death and rebirth — the spiritual core of Tohoku, a pilgrimage site for over 1,400 years. Yamabushi mountain monks still train here. You can feel the weight of it.</p>
+      <p>Mt Haguro: the cedar forest approach with its 2,446 stone steps, then an overnight in a shukubo lodge at the summit. Mt Gassan: a snow-covered alpine ascent (microspikes needed in late May) — the summit shrine is closed until July but the approach is extraordinary. Mt Yudono opens June 1 and is the most sacred of the three — photography forbidden, shoes removed at the gate.</p>
+      <div class="note">⚠ Gas-san summit shrine closed until July 1 — but the ascent itself, through snowfields and alpine meadows, is the reason to go.</div>
+      <div class="tags">
+        <span class="tag hot">Book shukubo lodge</span>
+        <span class="tag">2,446 cedar steps</span>
+        <span class="tag">Snow hiking</span>
+        <span class="tag">Yamabushi culture</span>
+        <span class="tag">Shojin ryori meals</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <div class="img-stack">
+        <img class="wide" src="https://images.unsplash.com/photo-1610126741963-4cb43766bce0?w=1200&auto=format&fit=crop" alt="Japanese cedar forest mountain path">
+        <img src="https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=800&auto=format&fit=crop" alt="Snow mountain Japan alpine">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop" alt="Japanese mountain pagoda">
+      </div>
+      <p class="img-caption">Mt Haguro cedar approach + Gas-san snowfields · Yamagata</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 04 NYUTO ONSEN -->
+<section class="stop" id="nyuto">
+  <div class="stop-inner reverse">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">04 ·</span>
+        <span class="stop-days">Days 9–11</span>
+      </div>
+      <h2>Nyuto <em>Onsen</em></h2>
+      <p class="stop-region">Akita Prefecture · Mountain hot springs</p>
+      <p>Seven ryokan scattered through a beech forest at the foot of Mt Nyuto — each fed by a different spring, each with its own character. This is the Tohoku onsen experience: no resort hotels, no lobby bars, just thatched roofs and sulphur steam.</p>
+      <p>Tsurunoyu, the oldest at over 350 years, is the one to aim for: milky-white water in an outdoor bath surrounded by forest, irori hearth dinners, oil-lamp rooms without television. The Yumeguri Pass lets you hop between all seven onsen in a day.</p>
+      <div class="note">Book Tsurunoyu exactly 6 months in advance — phone only, from 7am on the 1st of the month. Main rooms go fast; the Yama no Yado annex is the fallback.</div>
+      <div class="tags">
+        <span class="tag hot">Book 6 months ahead</span>
+        <span class="tag">Milky sulfur waters</span>
+        <span class="tag">Irori hearth dinners</span>
+        <span class="tag">Beech forest walks</span>
+        <span class="tag">Yumeguri onsen pass</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <img class="img-primary" src="https://images.unsplash.com/photo-1525602439-a97a13b108ad?w=1000&auto=format&fit=crop" alt="Japanese onsen outdoor hot spring bath">
+      <p class="img-caption">Tsurunoyu outdoor bath · Nyuto Onsen, Akita</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 05 TAZAWA + KAKUNODATE -->
+<section class="stop" id="tazawa">
+  <div class="stop-inner">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">05 ·</span>
+        <span class="stop-days">Days 12–13</span>
+      </div>
+      <h2>Tazawa &amp; <em>Kakunodate</em></h2>
+      <p class="stop-region">Akita Prefecture · Lake &amp; samurai town</p>
+      <p>Lake Tazawa is Japan's deepest lake — an intense, almost cobalt blue from the minerals in the water. It sits right on the Akita Shinkansen line, making it a natural stop between Nyuto and Aomori.</p>
+      <p>Kakunodate, 20 minutes south, is everything Kyoto's preserved districts used to be before the crowds arrived. Samurai houses line the main street, many still owned by the same families after 400 years. In late May, weeping cherry trees overhang the black-walled kura storehouses.</p>
+      <div class="tags">
+        <span class="tag">Japan's deepest lake</span>
+        <span class="tag">Samurai district</span>
+        <span class="tag">Weeping cherry trees</span>
+        <span class="tag">Shinkansen access</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <div class="img-stack">
+        <img src="https://images.unsplash.com/photo-1497884421767-8a7c36c5ec45?w=800&auto=format&fit=crop" alt="Japan mountain lake deep blue">
+        <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&auto=format&fit=crop" alt="Japan traditional wooden street">
+      </div>
+      <p class="img-caption">Lake Tazawa · Kakunodate samurai district</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 06 OIRASE -->
+<section class="stop" id="oirase">
+  <div class="stop-inner reverse">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">06 ·</span>
+        <span class="stop-days">Days 14–16</span>
+      </div>
+      <h2>Oirase <em>Gorge</em></h2>
+      <p class="stop-region">Aomori Prefecture · Forest stream walk</p>
+      <p>A 14-kilometre path alongside one of the most photographed streams in Japan: crystal water rushing between moss-carpeted boulders, a dozen named waterfalls, and a canopy that turns the light jade-green in June. Flat, well-maintained, deeply calming.</p>
+      <p>Mid-May to June is one of the two ideal seasons — the fresh greenery is at its most intense and the autumn crowds are months away. Walk the full route in around 4–5 hours, or do a section and take the bus back. The gorge ends at Lake Towada, where you can stay overnight and do a boat cruise on the caldera lake the following morning.</p>
+      <div class="tags">
+        <span class="tag">14km forest walk</span>
+        <span class="tag">Peak season: late May–June</span>
+        <span class="tag">Lake Towada overnight</span>
+        <span class="tag">Caldera boat cruise</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <img class="img-primary" src="https://images.unsplash.com/photo-1546961342-ea5f62d95e5e?w=1000&auto=format&fit=crop" alt="Japan forest stream mossy rocks">
+      <p class="img-caption">Oirase gorge stream · Towada-Hachimantai National Park</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 07 HAKKODA -->
+<section class="stop" id="hakkoda">
+  <div class="stop-inner">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">07 ·</span>
+        <span class="stop-days">Days 17–18</span>
+      </div>
+      <h2>Mt <em>Hakkoda</em></h2>
+      <p class="stop-region">Aomori Prefecture · Volcanic ridge</p>
+      <p>A cluster of volcanic peaks between Towada and Aomori city — famous for receiving some of the heaviest snowfall of any mountain in the world (up to 17 metres in winter). By June, the ropeway is running and the ridgeline trails are open, offering wide views across Aomori Bay and back towards the Towada plateau.</p>
+      <p>A good half-day from Aomori city before settling in for the final stretch. The Sukayu Onsen at the mountain base is one of the last remaining large mixed-gender public baths (sennin-buro) in Japan.</p>
+      <div class="tags">
+        <span class="tag">Ropeway + ridge walk</span>
+        <span class="tag">Sukayu Onsen sennin-buro</span>
+        <span class="tag">Half-day from Aomori</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <img class="img-primary" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1000&auto=format&fit=crop" alt="Japan mountain volcanic green summer">
+      <p class="img-caption">Mt Hakkoda from the Towada plateau · Aomori</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark">↓</div><div class="divider-line"></div></div>
+
+<!-- 08 AOMORI + HIROSAKI -->
+<section class="stop" id="aomori">
+  <div class="stop-inner reverse">
+    <div class="stop-text">
+      <div class="stop-header">
+        <span class="stop-num">08 ·</span>
+        <span class="stop-days">Days 19–22</span>
+      </div>
+      <h2>Aomori &amp; <em>Hirosaki</em></h2>
+      <p class="stop-region">Aomori Prefecture · City &amp; castle town</p>
+      <p>Aomori city is the end of the Shinkansen line and the gateway to Hokkaido. It's also one of Japan's best seafood cities — the Furukawa covered market (Aomori Gyosai Center) at dawn is the local alternative to Tsukiji, without the queues. The Nebuta Museum (Wa-Rasse) displays the enormous illuminated floats year-round.</p>
+      <p>Hirosaki, 40 minutes west, is a quieter version of what Kanazawa was 20 years ago. A castle still in its original form, a well-preserved samurai quarter, and an apple-growing culture that shows up in everything from cider to curry. A gentler final act before flying home.</p>
+      <div class="tags">
+        <span class="tag">Furukawa seafood market</span>
+        <span class="tag">Nebuta Museum</span>
+        <span class="tag">Hirosaki castle</span>
+        <span class="tag">Sannai-Maruyama Jomon site</span>
+        <span class="tag">Fly out from Aomori Airport</span>
+      </div>
+    </div>
+    <div class="img-block">
+      <div class="img-stack">
+        <img src="https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&auto=format&fit=crop" alt="Japanese castle moat reflection">
+        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop" alt="Japan festival lantern lights night">
+      </div>
+      <p class="img-caption">Hirosaki Castle · Nebuta festival floats, Aomori</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Tohoku · May 21 – June 13, 2026 &nbsp;·&nbsp; 23 days &nbsp;·&nbsp; Fly out Aomori → Tokyo → Tbilisi</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const stops = document.querySelectorAll('.stop');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  stops.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

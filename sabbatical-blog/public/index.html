@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B — Sabbatical</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav-logo">B</a>
+    <ul class="nav-links">
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/prints">3D Prints</a></li>
+    </ul>
+    <a href="/admin" class="nav-admin-link">admin</a>
+  </nav>
+
+  <main id="wall" class="photo-wall">
+    <!-- populated by JS -->
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true">
+    <button class="lightbox-close" id="lb-close" aria-label="Close">&#x2715;</button>
+    <button class="lightbox-nav lightbox-prev" id="lb-prev" aria-label="Previous">&#x2039;</button>
+    <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="Next">&#x203A;</button>
+    <div class="lightbox-inner">
+      <img class="lightbox-img" id="lb-img" src="" alt="">
+      <div class="lightbox-caption" id="lb-caption"></div>
+    </div>
+  </div>
+
+  <script src="/js/photowall.js"></script>
+  <script>
+    initPhotoWall({ wall: 'photos', el: document.getElementById('wall') });
+  </script>
+</body>
+</html>
