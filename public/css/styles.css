@@ -100,7 +100,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 0;
-  min-height: calc(100dvh - var(--nav-h));
 }
 
 .photo-item {
