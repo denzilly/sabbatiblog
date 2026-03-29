@@ -4,3 +4,5 @@ uploads/photos/*.jpg
 uploads/photos/thumbs/*.jpg
 uploads/prints/*.jpg
 uploads/prints/thumbs/*.jpg
+uploads/blog/*.jpg
+../tohoku-trip.html

@@ -119,7 +119,8 @@
       <button type="submit">Enter</button>
     </form>
     <script>
-      if (location.search.includes('error=1')) {
+      const p = new URLSearchParams(location.search);
+      if (p.get('error') === '1') {
         const el = document.createElement('p');
         el.className = 'error';
         el.textContent = 'incorrect password';

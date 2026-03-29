@@ -78,7 +78,7 @@ body {
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--paper);
+  color: var(--accent);
 }
 
 .nav-admin-link {
