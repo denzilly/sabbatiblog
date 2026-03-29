@@ -316,6 +316,42 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.post-body h1,
+.post-body h2,
+.post-body h3 {
+  font-weight: 400;
+  color: var(--paper);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.post-body h1 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+.post-body h2 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
+.post-body h3 { font-size: clamp(1rem, 2vw, 1.2rem); }
+
+.post-body strong { font-weight: 500; color: var(--paper); }
+.post-body em     { font-style: italic; }
+
+.post-body a {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+
+.post-body a:hover { opacity: 1; }
+
+.post-body img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+  margin: 2rem 0;
+  object-fit: cover;
+}
+
 .back-link {
   display: inline-block;
   font-family: 'DM Mono', monospace;

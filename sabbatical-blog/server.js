@@ -107,6 +107,26 @@ app.get('/api/posts/:id', (req, res) => {
   res.json(post);
 });
 
+// POST upload blog image (stored in uploads/blog/, not added to any wall data)
+app.post('/api/upload/blog-image', upload.single('photo'), async (req, res) => {
+  const id = uuidv4();
+  const filename = `${id}.jpg`;
+  const uploadDir = path.join(__dirname, 'uploads', 'blog');
+  fs.mkdirSync(uploadDir, { recursive: true });
+
+  try {
+    await sharp(req.file.buffer)
+      .rotate()
+      .resize({ width: 1200, withoutEnlargement: true })
+      .jpeg({ quality: 85 })
+      .toFile(path.join(uploadDir, filename));
+    res.json({ url: `/uploads/blog/${filename}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
 // POST upload photo
 app.post('/api/upload/:wall', upload.single('photo'), async (req, res) => {
   const wall = req.params.wall; // 'photos' or 'prints'

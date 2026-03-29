@@ -1,3 +1,6 @@
+// Configure marked: convert single newlines to <br>
+marked.use({ breaks: true });
+
 const listView  = document.getElementById('blog-list');
 const postView  = document.getElementById('blog-post');
 const postList  = document.getElementById('post-list');
@@ -24,8 +27,14 @@ function showList(posts) {
     const item = document.createElement('div');
     item.className = 'post-item fade-up';
 
-    const words = post.body.split(/\s+/).slice(0, 30).join(' ');
-    const excerpt = words + (post.body.split(/\s+/).length > 30 ? '…' : '');
+    const plain = post.body
+      .replace(/!\[.*?\]\(.*?\)/g, '')
+      .replace(/\[(.+?)\]\(.*?\)/g, '$1')
+      .replace(/#{1,6}\s/g, '')
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1');
+    const words = plain.split(/\s+/).slice(0, 30).join(' ');
+    const excerpt = words + (plain.split(/\s+/).length > 30 ? '…' : '');
 
     item.innerHTML = `
       <p class="post-meta">${formatDate(post.createdAt)}</p>
@@ -52,12 +61,8 @@ function showPost(post) {
   document.getElementById('post-date').textContent = formatDate(post.createdAt);
   document.getElementById('post-title').textContent = post.title;
 
-  // Render body: split on double newlines → paragraphs
   const bodyEl = document.getElementById('post-body');
-  bodyEl.innerHTML = post.body
-    .split(/\n\n+/)
-    .map(p => `<p>${escHtml(p.trim()).replace(/\n/g, '<br>')}</p>`)
-    .join('');
+  bodyEl.innerHTML = marked.parse(post.body);
 }
 
 backBtn.addEventListener('click', e => {

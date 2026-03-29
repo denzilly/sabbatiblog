@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "878af1d9-9700-4986-bf5c-f5acf38158e8",
+    "title": "TEST",
+    "body": "TEST\n![](/uploads/blog/f9f44068-e0ae-429d-87a1-88f342ce7e1d.jpg)\nTEST",
+    "createdAt": "2026-03-29T11:29:16.971Z"
+  },
+  {
+    "id": "1109a7bd-134e-46db-b4f6-50b3c2cca39b",
+    "title": "Welcome home",
+    "body": "This is a test blog post in which I'm writing dummy text as a test.\n\nThis is a new paragraph, how delightful. I want to create a new website that will function as:\n- a photo wall for my sabbatical trip\n- a simple blog page\n- a second photo wall for my 3d print projects.\n\nThe website should be password protected I think. I would only want specific people to have access? lets discuss\n\n\nPhoto wall\nThe main landing page will be the photo wall.\n- There is a simple menu bar at the top that has a B in the top left, followed by menu options for BLOG, PROJECTS, 3D Prints\n- I very much like the styling used in the attached tohoku-trip.html page that you generated from me for another project. The menu bar with 01 Sendai 02 Matsushita etc would be a great inspiration for what the menu bar should look like\n\n- The photo wall itself will be seamless photos taking up the entire space of the page that isn't taken up by the menu bar.\n\n- Mouse over a photo makes it slightly shaded\n- Clicking a photo opens a lightbox, with a dark transparent texbox over the bottom of the photo that contains a comment that I can provide\n\n\nBlog\n\nBlog page should be a super simple blog that copies some of the styling from the tohoku-trip.html. It can just contain blog posts in order.\n\n\n\nI want to be able to update this page when I'm on my sabbatical, I will be typing on my phone.\n\n- I need to be able to easily create new blog posts\n- I need to be able to easily upload pictures that get resized automatically for thumbs and stuff like that (for the photowall)",
+    "createdAt": "2026-03-29T11:16:33.858Z"
+  }
+]

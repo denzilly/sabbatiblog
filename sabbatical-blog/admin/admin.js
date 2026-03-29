@@ -238,6 +238,13 @@ function renderPostsManage(posts) {
       </div>
       <div class="edit-inline" id="edit-post-${post.id}">
         <input type="text" class="edit-post-title" value="${escAttr(post.title)}" placeholder="Title…" style="margin-bottom:0.5rem">
+        <div class="post-toolbar">
+          <button type="button" class="toolbar-btn" data-action="bold"><strong>B</strong></button>
+          <button type="button" class="toolbar-btn italic" data-action="italic">I</button>
+          <button type="button" class="toolbar-btn" data-action="h2">H2</button>
+          <button type="button" class="toolbar-btn" data-action="img">IMG</button>
+          <input type="file" class="blog-img-input" accept="image/*" style="display:none">
+        </div>
         <textarea class="edit-post-body" style="min-height:140px;margin-bottom:0.5rem">${escHtml(post.body)}</textarea>
         <div style="display:flex;gap:0.4rem">
           <button class="btn btn-primary save-post-btn" style="padding:0.4rem 0.7rem;font-size:0.55rem" data-id="${post.id}">Save</button>
@@ -252,6 +259,13 @@ function renderPostsManage(posts) {
     btn.addEventListener('click', () => {
       document.getElementById(`edit-post-${btn.dataset.id}`).classList.toggle('open');
     });
+  });
+
+  // Wire toolbars for each edit inline
+  el.querySelectorAll('.edit-inline').forEach(editEl => {
+    const toolbar  = editEl.querySelector('.post-toolbar');
+    const textarea = editEl.querySelector('.edit-post-body');
+    if (toolbar && textarea) setupToolbar(toolbar, textarea);
   });
 
   el.querySelectorAll('.cancel-post-btn').forEach(btn => {
@@ -286,6 +300,78 @@ function renderPostsManage(posts) {
     });
   });
 }
+
+// ── Post toolbar ──────────────────────────────────────────────────────────────
+function setupToolbar(toolbarEl, textarea) {
+  toolbarEl.querySelector('[data-action="bold"]').addEventListener('click', () => {
+    wrapSelection(textarea, '**', '**');
+  });
+  toolbarEl.querySelector('[data-action="italic"]').addEventListener('click', () => {
+    wrapSelection(textarea, '*', '*');
+  });
+  toolbarEl.querySelector('[data-action="h2"]').addEventListener('click', () => {
+    prefixLine(textarea, '## ');
+  });
+
+  const imgBtn   = toolbarEl.querySelector('[data-action="img"]');
+  const imgInput = toolbarEl.querySelector('.blog-img-input');
+
+  imgBtn.addEventListener('click', () => imgInput.click());
+
+  imgInput.addEventListener('change', async () => {
+    const file = imgInput.files[0];
+    if (!file) return;
+    imgBtn.disabled = true;
+    imgBtn.textContent = '…';
+
+    const fd = new FormData();
+    fd.append('photo', file);
+    try {
+      const res = await fetch('/api/upload/blog-image', { method: 'POST', body: fd });
+      if (res.ok) {
+        const { url } = await res.json();
+        insertText(textarea, `\n![](${url})\n`);
+      }
+    } catch {}
+
+    imgBtn.disabled  = false;
+    imgBtn.textContent = 'IMG';
+    imgInput.value   = '';
+  });
+}
+
+function wrapSelection(textarea, before, after) {
+  const start    = textarea.selectionStart;
+  const end      = textarea.selectionEnd;
+  const selected = textarea.value.substring(start, end);
+  textarea.value = textarea.value.substring(0, start) + before + selected + after + textarea.value.substring(end);
+  textarea.selectionStart = start + before.length;
+  textarea.selectionEnd   = end   + before.length;
+  textarea.focus();
+}
+
+function prefixLine(textarea, prefix) {
+  const start     = textarea.selectionStart;
+  const lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
+  if (textarea.value.substring(lineStart, lineStart + prefix.length) === prefix) {
+    textarea.value = textarea.value.substring(0, lineStart) + textarea.value.substring(lineStart + prefix.length);
+    textarea.selectionStart = textarea.selectionEnd = Math.max(lineStart, start - prefix.length);
+  } else {
+    textarea.value = textarea.value.substring(0, lineStart) + prefix + textarea.value.substring(lineStart);
+    textarea.selectionStart = textarea.selectionEnd = start + prefix.length;
+  }
+  textarea.focus();
+}
+
+function insertText(textarea, text) {
+  const start = textarea.selectionStart;
+  textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(start);
+  textarea.selectionStart = textarea.selectionEnd = start + text.length;
+  textarea.focus();
+}
+
+// Wire up toolbar for the new-post panel
+setupToolbar(document.getElementById('post-toolbar'), document.getElementById('post-body'));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function showFeedback(el, type, msg) {
