@@ -14,7 +14,7 @@ function initPhotoWall({ wall, el }) {
     const p = photos[current];
     lbImg.src = `/uploads/${wall}/${p.filename}`;
     lbImg.alt = p.caption || '';
-    lbCap.textContent = p.caption || '';
+    lbCap.innerHTML = renderCaption(p.caption || '');
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
     lbImg.focus();
@@ -76,6 +76,13 @@ function initPhotoWall({ wall, el }) {
       div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openLightbox(i); });
       el.appendChild(div);
     });
+  }
+
+  function renderCaption(text) {
+    return text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+|\/[^)]*)\)/g,
+        '<a href="$2" target="_blank" rel="noopener" style="color:inherit;text-underline-offset:3px">$1</a>');
   }
 
   fetch(`/api/${wall}`)

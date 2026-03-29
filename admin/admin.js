@@ -6,6 +6,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
     document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
     if (tab.dataset.tab === 'manage') loadManage('photos');
+    if (tab.dataset.tab === 'files') loadFiles();
   });
 });
 
@@ -386,4 +387,108 @@ function escHtml(s) {
 
 function escAttr(s) {
   return String(s).replace(/"/g, '&quot;');
+}
+
+// ── Files tab ─────────────────────────────────────────────────────────────────
+const fileFileInput  = document.getElementById('file-file-input');
+const fileDropzone   = document.getElementById('file-dropzone');
+const fileDropPrev   = document.getElementById('file-drop-preview');
+const fileUploadBtn  = document.getElementById('file-upload-btn');
+const fileUploadProg = document.getElementById('file-upload-progress');
+const fileFeedback   = document.getElementById('file-feedback');
+
+let selectedFileFiles = [];
+
+fileFileInput.addEventListener('change', () => {
+  selectedFileFiles = Array.from(fileFileInput.files);
+  renderFilePreviews();
+});
+
+fileDropzone.addEventListener('dragover', e => { e.preventDefault(); fileDropzone.classList.add('drag-over'); });
+fileDropzone.addEventListener('dragleave', () => fileDropzone.classList.remove('drag-over'));
+fileDropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  fileDropzone.classList.remove('drag-over');
+  selectedFileFiles = Array.from(e.dataTransfer.files);
+  renderFilePreviews();
+});
+
+function renderFilePreviews() {
+  fileUploadBtn.disabled = selectedFileFiles.length === 0;
+  fileDropPrev.textContent = selectedFileFiles.map(f => f.name).join(', ');
+}
+
+fileUploadBtn.addEventListener('click', async () => {
+  if (!selectedFileFiles.length) return;
+  fileUploadBtn.disabled = true;
+  fileUploadProg.classList.add('active');
+  fileFeedback.className = 'feedback';
+
+  let succeeded = 0, failed = 0;
+
+  for (const file of selectedFileFiles) {
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      const res = await fetch('/api/upload/file', { method: 'POST', body: fd });
+      if (res.ok) succeeded++;
+      else failed++;
+    } catch { failed++; }
+    fileUploadProg.textContent = `Uploading… ${succeeded + failed} / ${selectedFileFiles.length}`;
+  }
+
+  fileUploadProg.classList.remove('active');
+  fileUploadBtn.disabled = false;
+  selectedFileFiles = [];
+  fileFileInput.value = '';
+  fileDropPrev.textContent = '';
+
+  if (failed === 0) showFeedback(fileFeedback, 'success', `${succeeded} file${succeeded !== 1 ? 's' : ''} uploaded`);
+  else showFeedback(fileFeedback, 'error', `${succeeded} uploaded, ${failed} failed`);
+
+  loadFiles();
+});
+
+async function loadFiles() {
+  const files = await fetch('/api/files').then(r => r.json()).catch(() => []);
+  const el = document.getElementById('files-list');
+  el.innerHTML = '';
+
+  if (!files.length) {
+    el.innerHTML = '<p style="font-family:\'DM Mono\',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;padding:1rem 0;">No files yet</p>';
+    return;
+  }
+
+  files.forEach(file => {
+    const div = document.createElement('div');
+    div.className = 'manage-item';
+    div.style.alignItems = 'center';
+    div.innerHTML = `
+      <div class="manage-info">
+        <div class="manage-caption">${escHtml(file.name)}</div>
+        <div class="manage-meta">${(file.size / 1024).toFixed(0)} KB · <span style="user-select:all;opacity:0.6">${escHtml(file.url)}</span></div>
+      </div>
+      <div class="manage-actions">
+        <button class="btn btn-secondary copy-url-btn" data-url="${escAttr(file.url)}" style="padding:0.4rem 0.7rem;font-size:0.55rem">Copy URL</button>
+        <button class="btn btn-danger delete-file-btn" data-name="${escAttr(file.name)}" style="padding:0.4rem 0.7rem;font-size:0.55rem">Del</button>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+
+  el.querySelectorAll('.copy-url-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(btn.dataset.url);
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = 'Copy URL'; }, 2000);
+    });
+  });
+
+  el.querySelectorAll('.delete-file-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm(`Delete ${btn.dataset.name}?`)) return;
+      await fetch(`/api/files/${encodeURIComponent(btn.dataset.name)}`, { method: 'DELETE' });
+      loadFiles();
+    });
+  });
 }

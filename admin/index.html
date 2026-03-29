@@ -473,6 +473,7 @@
   <button class="tab active" data-tab="upload">Upload</button>
   <button class="tab" data-tab="post">New Post</button>
   <button class="tab" data-tab="manage">Manage</button>
+  <button class="tab" data-tab="files">Files</button>
 </div>
 
 <!-- ── UPLOAD TAB ─────────────────────────────────────────────────────────── -->
@@ -549,6 +550,23 @@
     <p class="section-heading">Blog Posts</p>
     <div id="posts-list" class="manage-list"></div>
   </div>
+</section>
+
+<!-- ── FILES TAB ───────────────────────────────────────────────────────────── -->
+<section id="tab-files" class="panel">
+  <div id="file-feedback" class="feedback"></div>
+
+  <div class="dropzone" id="file-dropzone">
+    <input type="file" id="file-file-input" multiple>
+    <p class="dropzone-text">Tap to select files (STL, 3MF, OBJ…)</p>
+    <div id="file-drop-preview" style="margin-top:0.75rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--muted)"></div>
+  </div>
+
+  <button class="btn btn-primary" id="file-upload-btn" disabled style="margin-bottom:1.5rem">Upload</button>
+  <div class="upload-progress" id="file-upload-progress">Uploading…</div>
+
+  <p class="section-heading">Uploaded files</p>
+  <div id="files-list" class="manage-list"></div>
 </section>
 
 <script src="/admin/admin.js"></script>

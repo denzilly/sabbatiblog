@@ -55,6 +55,12 @@ const upload = multer({
   },
 });
 
+// Multer: for arbitrary files (STL, 3MF, OBJ, etc.)
+const uploadFile = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 200 * 1024 * 1024 }, // 200MB
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -273,6 +279,44 @@ app.delete('/api/:wall/:id', requireAdmin, (req, res) => {
   });
 
   writeData(DATA[wall], data.filter(x => x.id !== id));
+  res.json({ ok: true });
+});
+
+// GET list uploaded files (admin only)
+app.get('/api/files', requireAdmin, (req, res) => {
+  const dir = path.join(__dirname, 'uploads/files');
+  fs.mkdirSync(dir, { recursive: true });
+  const files = fs.readdirSync(dir).map(name => ({
+    name,
+    url: `/uploads/files/${name}`,
+    size: fs.statSync(path.join(dir, name)).size,
+  }));
+  res.json(files);
+});
+
+// POST upload arbitrary file (admin only)
+app.post('/api/upload/file', requireAdmin, uploadFile.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file provided' });
+
+  const ext = path.extname(req.file.originalname).toLowerCase();
+  const filename = `${uuidv4()}${ext}`;
+  const dir = path.join(__dirname, 'uploads/files');
+  fs.mkdirSync(dir, { recursive: true });
+
+  try {
+    fs.writeFileSync(path.join(dir, filename), req.file.buffer);
+    res.json({ url: `/uploads/files/${filename}`, name: req.file.originalname, filename });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
+// DELETE uploaded file (admin only)
+app.delete('/api/files/:filename', requireAdmin, (req, res) => {
+  const filename = path.basename(req.params.filename); // prevent path traversal
+  const filepath = path.join(__dirname, 'uploads/files', filename);
+  try { fs.unlinkSync(filepath); } catch {}
   res.json({ ok: true });
 });
 
