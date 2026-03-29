@@ -29,11 +29,13 @@ const HASHES = {
   admin:  bcrypt.hashSync(PASSWORDS.admin,  10),
 };
 
-// Data file paths
+// Data file paths (inside uploads so one persistent volume covers both)
+const DATA_DIR = path.join(__dirname, 'uploads/data');
+fs.mkdirSync(DATA_DIR, { recursive: true });
 const DATA = {
-  photos: path.join(__dirname, 'data/photos.json'),
-  prints: path.join(__dirname, 'data/prints.json'),
-  posts:  path.join(__dirname, 'data/posts.json'),
+  photos: path.join(DATA_DIR, 'photos.json'),
+  prints: path.join(DATA_DIR, 'prints.json'),
+  posts:  path.join(DATA_DIR, 'posts.json'),
 };
 
 function readData(file) {
