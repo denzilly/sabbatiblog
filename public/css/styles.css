@@ -189,7 +189,6 @@ body {
   padding: 1rem 1.25rem;
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   font-weight: 300;
-  font-style: italic;
   color: var(--paper);
   min-height: 56px;
 }
