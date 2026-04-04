@@ -10,7 +10,7 @@ cp .env.example .env   # set your PASSWORD and SESSION_SECRET
 npm run dev            # starts with --watch (Node 18+)
 ```
 
-Open http://localhost:3000 — default password is `sabbatical2026`.
+Open http://localhost:3000
 
 ## Deploy to Railway
 
@@ -35,10 +35,3 @@ uploads/       Uploaded images (full-size + thumbnails)
 server.js      Express backend
 ```
 
-## Env vars
-
-| Variable | Description |
-|---|---|
-| `PASSWORD` | Site password (single shared password for all visitors) |
-| `SESSION_SECRET` | Secret for signing session cookies — make it long and random |
-| `PORT` | Port to listen on (default 3000) |
