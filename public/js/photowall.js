@@ -43,6 +43,19 @@ function initPhotoWall({ wall, el }) {
     if (e.target === lightbox) closeLightbox();
   });
 
+  let touchStartX = null;
+  lightbox.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', e => {
+    if (touchStartX === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(delta) < 50) return;
+    if (delta < 0) showNext();
+    else showPrev();
+  }, { passive: true });
+
   document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape') closeLightbox();
