@@ -422,6 +422,22 @@
 
     .wall-tab.active { color: var(--paper); border-bottom-color: var(--paper); }
 
+    /* ── Drag reorder ── */
+    .drag-handle {
+      cursor: grab;
+      color: var(--muted);
+      font-size: 1rem;
+      flex-shrink: 0;
+      padding: 0 0.25rem;
+      user-select: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .drag-handle:active { cursor: grabbing; }
+    .manage-item.dragging { opacity: 0.35; }
+    .manage-item.drag-over { outline: 1px solid var(--paper); }
+
     /* ── Post toolbar ── */
     .post-toolbar {
       display: flex;

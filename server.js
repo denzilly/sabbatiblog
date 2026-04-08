@@ -250,6 +250,22 @@ app.delete('/api/posts/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
+// PUT reorder photos
+app.put('/api/reorder/:wall', requireAdmin, (req, res) => {
+  const { wall } = req.params;
+  if (!['photos', 'prints'].includes(wall)) return res.status(400).json({ error: 'Invalid wall' });
+
+  const ids = req.body.ids;
+  if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids must be an array' });
+
+  const data = readData(DATA[wall]);
+  const reordered = ids.map(id => data.find(x => x.id === id)).filter(Boolean);
+  data.forEach(x => { if (!ids.includes(x.id)) reordered.push(x); });
+
+  writeData(DATA[wall], reordered);
+  res.json({ ok: true });
+});
+
 // PATCH update photo caption  (generic — must come after /api/posts/:id)
 app.patch('/api/:wall/:id', requireAdmin, (req, res) => {
   const { wall, id } = req.params;

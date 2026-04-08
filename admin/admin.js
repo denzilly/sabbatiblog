@@ -150,10 +150,15 @@ function renderPhotosManage(wall, items) {
     return;
   }
 
+  let dragSrc = null;
+
   items.forEach(item => {
     const div = document.createElement('div');
     div.className = 'manage-item';
+    div.draggable = true;
+    div.dataset.id = item.id;
     div.innerHTML = `
+      <div class="drag-handle" title="Drag to reorder">⠿</div>
       <img class="manage-thumb" src="/uploads/${wall}/thumbs/${item.thumb}" alt="">
       <div class="manage-info">
         <div class="manage-caption">${escHtml(item.caption || '(no caption)')}</div>
@@ -171,6 +176,39 @@ function renderPhotosManage(wall, items) {
         <button class="btn btn-danger delete-photo-btn" data-id="${item.id}" data-wall="${wall}" style="padding:0.4rem 0.7rem;font-size:0.55rem">Del</button>
       </div>
     `;
+
+    div.addEventListener('dragstart', e => {
+      dragSrc = div;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => div.classList.add('dragging'), 0);
+    });
+
+    div.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (div !== dragSrc) div.classList.add('drag-over');
+    });
+
+    div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+
+    div.addEventListener('drop', e => {
+      e.preventDefault();
+      div.classList.remove('drag-over');
+      if (!dragSrc || dragSrc === div) return;
+      const all = [...el.querySelectorAll('.manage-item')];
+      const srcIdx = all.indexOf(dragSrc);
+      const dstIdx = all.indexOf(div);
+      el.insertBefore(dragSrc, srcIdx < dstIdx ? div.nextSibling : div);
+      const newIds = [...el.querySelectorAll('.manage-item')].map(d => d.dataset.id);
+      saveOrder(wall, newIds);
+    });
+
+    div.addEventListener('dragend', () => {
+      div.classList.remove('dragging');
+      el.querySelectorAll('.manage-item').forEach(d => d.classList.remove('drag-over'));
+      dragSrc = null;
+    });
+
     el.appendChild(div);
   });
 
@@ -375,6 +413,14 @@ function insertText(textarea, text) {
 setupToolbar(document.getElementById('post-toolbar'), document.getElementById('post-body'));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+async function saveOrder(wall, ids) {
+  await fetch(`/api/reorder/${wall}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids }),
+  });
+}
+
 function showFeedback(el, type, msg) {
   el.className = `feedback ${type}`;
   el.textContent = msg;
