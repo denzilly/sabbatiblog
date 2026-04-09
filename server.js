@@ -149,6 +149,24 @@ app.get('/api/posts/:id', requireBlog, (req, res) => {
 
 // Admin-only write access
 
+// POST upload arbitrary file (admin only)
+app.post('/api/upload/file', requireAdmin, uploadFile.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file provided' });
+
+  const ext = path.extname(req.file.originalname).toLowerCase();
+  const filename = `${uuidv4()}${ext}`;
+  const dir = path.join(__dirname, 'uploads/files');
+  fs.mkdirSync(dir, { recursive: true });
+
+  try {
+    fs.writeFileSync(path.join(dir, filename), req.file.buffer);
+    res.json({ url: `/uploads/files/${filename}`, name: req.file.originalname, filename });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
 // POST upload blog image
 app.post('/api/upload/blog-image', requireAdmin, upload.single('photo'), async (req, res) => {
   const id = uuidv4();
@@ -308,24 +326,6 @@ app.get('/api/files', requireAdmin, (req, res) => {
     size: fs.statSync(path.join(dir, name)).size,
   }));
   res.json(files);
-});
-
-// POST upload arbitrary file (admin only)
-app.post('/api/upload/file', requireAdmin, uploadFile.single('file'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'No file provided' });
-
-  const ext = path.extname(req.file.originalname).toLowerCase();
-  const filename = `${uuidv4()}${ext}`;
-  const dir = path.join(__dirname, 'uploads/files');
-  fs.mkdirSync(dir, { recursive: true });
-
-  try {
-    fs.writeFileSync(path.join(dir, filename), req.file.buffer);
-    res.json({ url: `/uploads/files/${filename}`, name: req.file.originalname, filename });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Upload failed' });
-  }
 });
 
 // DELETE uploaded file (admin only)
