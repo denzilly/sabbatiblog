@@ -122,9 +122,10 @@ app.use('/admin',        requireAdmin,  express.static(path.join(__dirname, 'adm
 
 // ── Page routes ───────────────────────────────────────────────────────────────
 
-app.get('/blog',   requireBlog,   (req, res) => res.sendFile(path.join(__dirname, 'public/blog.html')));
-app.get('/prints', requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/prints.html')));
-app.get('/admin',  requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'admin/index.html')));
+app.get('/blog',    requireBlog,   (req, res) => res.sendFile(path.join(__dirname, 'public/blog.html')));
+app.get('/prints',  requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/prints.html')));
+app.get('/foodmap', requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/foodmap.html')));
+app.get('/admin',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'admin/index.html')));
 
 // All remaining routes require at least photos-tier auth
 app.use(requirePhotos);

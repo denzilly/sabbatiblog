@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B — Food Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .foodmap-wrap {
+      margin-top: var(--nav-h);
+      padding-bottom: 5rem;
+    }
+
+    .foodmap-section {
+      padding: 0 0 2rem;
+    }
+
+    .foodmap-city-header {
+      padding: 3.5rem 1.5rem 2rem;
+      border-bottom: 1px solid rgba(245,240,232,0.08);
+      margin-bottom: 0;
+    }
+
+    .foodmap-city-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .foodmap-city-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      font-weight: 300;
+      color: var(--paper);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .foodmap-city-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .foodmap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(245,240,232,0.06);
+    }
+
+    .food-card {
+      background: var(--ink);
+      cursor: default;
+    }
+
+    .food-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .food-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .food-card:hover .food-img-wrap img {
+      transform: scale(1.04);
+    }
+
+    .food-info {
+      padding: 0.75rem 1rem 1rem;
+      border-top: none;
+    }
+
+    .food-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      font-weight: 400;
+      color: var(--paper);
+      line-height: 1.25;
+      margin-bottom: 0.25rem;
+    }
+
+    .food-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .foodmap-city-header {
+        padding: 2.5rem 1rem 1.5rem;
+      }
+
+      .foodmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .food-info {
+        padding: 0.6rem 0.75rem 0.75rem;
+      }
+
+      .food-name {
+        font-size: 0.95rem;
+      }
+
+      .food-desc {
+        font-size: 0.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav-logo">B</a>
+    <ul class="nav-links">
+      <li><a href="/">Photos</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/prints">3D Prints</a></li>
+      <li><a href="/foodmap" class="active">Food Map</a></li>
+    </ul>
+    <a href="/admin" class="nav-admin-link">admin</a>
+  </nav>
+
+  <div class="foodmap-wrap">
+
+    <section class="foodmap-section">
+      <div class="foodmap-city-header">
+        <p class="foodmap-city-label">city 01</p>
+        <h2 class="foodmap-city-name">Hong <em>Kong</em></h2>
+      </div>
+      <div class="foodmap-grid">
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/cheung-fun.png" alt="Cheung Fun" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Cheung Fun</p>
+        <p class="food-desc">steamed rice noodle roll</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/har-gow.png" alt="Har Gow" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Har Gow</p>
+        <p class="food-desc">Shrimp Dumpling</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/siu-mai.png" alt="Siu Mai" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Siu Mai</p>
+        <p class="food-desc">pork dumpling</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/char-siu-bao.png" alt="Char SIu Bao" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Char SIu Bao</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/hong-kong-egg-tart.png" alt="Hong Kong Egg Tart" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Hong Kong Egg Tart</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/egg-waffle.png" alt="Egg Waffle" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Egg Waffle</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/siu-yuk.png" alt="Siu Yuk" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Siu Yuk</p>
+        <p class="food-desc">Crispy Pork</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/roast-goose.png" alt="Roast Goose" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Roast Goose</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/curry-fish-ball.png" alt="Curry Fish Ball" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Curry Fish Ball</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/char-siu.png" alt="Char Siu" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Char Siu</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/hk-style-wonton-soup.png" alt="HK Style wonton soup" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">HK Style wonton soup</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/typhoon-shelter-crab.png" alt="Typhoon Shelter Crab" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Typhoon Shelter Crab</p>
+        
+      </div>
+    </div>
+      </div>
+    </section>
+
+    <section class="foodmap-section">
+      <div class="foodmap-city-header">
+        <p class="foodmap-city-label">city 02</p>
+        <h2 class="foodmap-city-name">Cheng<em>du</em></h2>
+      </div>
+      <div class="foodmap-grid">
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/mapo-tofu.png" alt="Mapo Tofu" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Mapo Tofu</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/sichuan-hot-pot.png" alt="Sichuan Hot Pot" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Sichuan Hot Pot</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/dan-dan-noodle.png" alt="Dan Dan Noodle" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Dan Dan Noodle</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/zhong-dumplings.png" alt="Zhong Dumplings" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Zhong Dumplings</p>
+        <p class="food-desc">(sweet spicy pork chili)</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/fuqi-feipian.png" alt="Fuqi Feipian" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Fuqi Feipian</p>
+        <p class="food-desc">Thin slice beef offal with peanut and celery</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/longchaoshou.png" alt="Longchaoshou" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Longchaoshou</p>
+        <p class="food-desc">Chengdu style wonton</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/rabbit-head.png" alt="Rabbit head" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Rabbit head</p>
+        <p class="food-desc">popular bar snack apparently</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/suan-la-fen.png" alt="Suan La Fen" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Suan La Fen</p>
+        <p class="food-desc">Sour and hot potato noodle, for breakfast or brunch</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/chengdu-style-breakfast-congee.png" alt="Chengdu Style Breakfast Congee" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Chengdu Style Breakfast Congee</p>
+        
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/yeer-ba.png" alt="Ye&#39;er Ba" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Ye&#39;er Ba</p>
+        <p class="food-desc">wrapped sticky rice cakes, for breakfast</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/mao-kaoya.png" alt="Mao Kaoya" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Mao Kaoya</p>
+        <p class="food-desc">Spicy braised roast duck</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/lao-ma-tihua.png" alt="Lǎo mā tíhuā" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Lǎo mā tíhuā</p>
+        <p class="food-desc">Grandma Pig Feet Soup (late night snack)</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/fenzheng-niuro.png" alt="Fěnzhēng Niúrò" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Fěnzhēng Niúrò</p>
+        <p class="food-desc">Steamed beef with rice powder</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/qiao-jiao-niurou.png" alt="Qiào jiǎo niúròu" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Qiào jiǎo niúròu</p>
+        <p class="food-desc">Stewed beef with herbs (good hangover cure, like pho)</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/tianshui-mian.png" alt="Tiánshuǐ Miàn" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Tiánshuǐ Miàn</p>
+        <p class="food-desc">thick chewy rice noodle with complex sweet spicy and savory sauce.</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/fei-chang-fen.png" alt="Fei Chang Fen" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Fei Chang Fen</p>
+        <p class="food-desc">sweet potato noodle with pork intestine</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/twice-cooked-pork.png" alt="Twice cooked pork" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Twice cooked pork</p>
+        <p class="food-desc">chengdu specialty</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/bo-bo-ji.png" alt="Bō bō jī" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Bō bō jī</p>
+        <p class="food-desc">Chilled spicy skewers</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/langya-tudou.png" alt="Lángyá Tǔdòu" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Lángyá Tǔdòu</p>
+        <p class="food-desc">wolf tooth potatoes</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/bingzui-douhua.png" alt="Bīngzuì Dòuhuā" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Bīngzuì Dòuhuā</p>
+        <p class="food-desc">Iced rice wine tofu pudding (nice on a hot day)</p>
+      </div>
+    </div>
+    <div class="food-card">
+      <div class="food-img-wrap">
+        <img src="/foodmap/silky-tofu-pudding.png" alt="Silky tofu pudding" loading="lazy" decoding="async">
+      </div>
+      <div class="food-info">
+        <p class="food-name">Silky tofu pudding</p>
+        
+      </div>
+    </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>
