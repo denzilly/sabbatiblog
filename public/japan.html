@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japan — Heading North · May–June 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#0f0d0b;--paper:#faf7f2;--cream:#f0ebe0;--red:#b5271e;--gold:#c9922a;--muted:#7a6e5f;--rule:#ddd5c4; }
+  html { scroll-behavior: smooth; }
+  body { background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-weight:300;line-height:1.6; }
+
+  .hero { min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;background:var(--ink);padding:80px 40px; }
+  .hero-bg { position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 110%,rgba(181,39,30,.18) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 20% 20%,rgba(201,146,42,.08) 0%,transparent 60%); }
+  .hero-bg::after { content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px; }
+  .hero-content { position:relative;z-index:1;max-width:800px; }
+  .hero-eyebrow { font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;display:flex;align-items:center;justify-content:center;gap:16px; }
+  .hero-eyebrow::before,.hero-eyebrow::after { content:'';width:40px;height:1px;background:var(--gold);opacity:.5; }
+  .hero h1 { font-family:'Playfair Display',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:400;color:#f5f0e8;line-height:.92;letter-spacing:-.02em;margin-bottom:24px; }
+  .hero h1 em { font-style:italic;color:var(--gold);display:block; }
+  .hero-sub { font-size:clamp(1rem,2vw,1.25rem);color:rgba(245,240,232,.55);letter-spacing:.05em;margin-bottom:48px;font-weight:300; }
+  .route-pills { display:flex;flex-wrap:wrap;gap:8px;justify-content:center; }
+  .pill { font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;border:1px solid rgba(255,255,255,.15);color:rgba(245,240,232,.6);border-radius:100px; }
+  .pill.active { border-color:var(--gold);color:var(--gold); }
+  .scroll-hint { position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(245,240,232,.3);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;z-index:1;animation:bob 2s ease-in-out infinite; }
+  .scroll-hint::after { content:'';width:1px;height:40px;background:linear-gradient(rgba(245,240,232,.3),transparent); }
+  @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)} }
+
+  .overview { background:var(--cream);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:40px 60px;display:flex;justify-content:center; }
+  .ov-item { text-align:center;padding:0 48px;border-right:1px solid var(--rule); }
+  .ov-item:last-child { border-right:none; }
+  .ov-num { font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--red);line-height:1;margin-bottom:4px; }
+  .ov-label { font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted); }
+
+  .stops { max-width:1100px;margin:0 auto;padding:0 40px 80px; }
+  .stop { padding:80px 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease; }
+  .stop.visible { opacity:1;transform:translateY(0); }
+  .stop:last-child { border-bottom:none; }
+  .stop:nth-child(even) .stop-text { order:2; }
+  .stop:nth-child(even) .stop-photos { order:1; }
+
+  .stop-num { font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:12px; }
+  .stop-num::after { content:'';flex:1;height:1px;background:var(--rule);max-width:40px; }
+  .stop-name { font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400;line-height:1.05;margin-bottom:8px; }
+  .stop-name em { font-style:italic;color:var(--muted);font-size:.6em;display:block;margin-top:4px; }
+  .stop-dates { font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:24px; }
+  .stop-desc { font-size:1.1rem;line-height:1.75;color:#3d342a;margin-bottom:28px;font-weight:300; }
+  .activities { list-style:none;display:flex;flex-direction:column;gap:8px; }
+  .activities li { font-size:.78rem;letter-spacing:.08em;color:var(--muted);display:flex;align-items:baseline;gap:10px; }
+  .activities li::before { content:'–';color:var(--gold);flex-shrink:0; }
+
+  .stop-photos { display:grid;gap:8px;grid-template-columns:1fr 1fr; }
+  .photo { overflow:hidden;position:relative;background:var(--cream); }
+  .photo:first-child { grid-column:1/-1; }
+  .photo img { width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.25,.46,.45,.94);min-height:160px; }
+  .photo:first-child img { min-height:280px; }
+  .photo:hover img { transform:scale(1.04); }
+  .photo-label { position:absolute;bottom:0;left:0;right:0;padding:20px 14px 12px;background:linear-gradient(transparent,rgba(15,13,11,.65));color:rgba(245,240,232,.85);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;opacity:0;transition:opacity .3s; }
+  .photo:hover .photo-label { opacity:1; }
+
+  .divider { text-align:center;padding:48px 40px;background:var(--cream);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule); }
+  .divider p { font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--muted);max-width:500px;margin:0 auto 8px; }
+  .divider small { font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold); }
+
+  footer { background:var(--ink);color:rgba(245,240,232,.4);text-align:center;padding:48px 40px;font-size:.75rem;letter-spacing:.1em; }
+  footer strong { display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:1.4rem;color:rgba(245,240,232,.7);font-weight:400;margin-bottom:12px; }
+
+  @media(max-width:720px){
+    .overview{flex-wrap:wrap;padding:30px 20px}
+    .ov-item{border-right:none;border-bottom:1px solid var(--rule);padding:20px 0;width:50%}
+    .stop{grid-template-columns:1fr;gap:32px;padding:48px 0}
+    .stop:nth-child(even) .stop-text,.stop:nth-child(even) .stop-photos{order:unset}
+    .stops{padding:0 20px 48px}
+    .hero{padding:60px 24px}
+  }
+</style>
+</head>
+<body>
+<a href="/" style="position:fixed;top:18px;left:24px;z-index:100;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.5);text-decoration:none;border-bottom:1px solid rgba(245,240,232,.2);padding-bottom:2px;transition:color .2s" onmouseover="this.style.color='rgba(245,240,232,.9)'" onmouseout="this.style.color='rgba(245,240,232,.5)'">&#x2190; blog</a>
+
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">May 23 – June 9, 2026</div>
+    <h1>Japan,<em>Heading North</em></h1>
+    <p class="hero-sub">17 days · 7 stops · Nikko to Tokyo via Tohoku &amp; Hokkaido</p>
+    <div class="route-pills">
+      <span class="pill">Nikko</span><span class="pill">Sendai</span><span class="pill">Sanriku</span>
+      <span class="pill">Aomori</span><span class="pill active">⛴ Ferry</span>
+      <span class="pill">Hakodate</span><span class="pill">Daisetsuzan</span><span class="pill">Tokyo</span>
+    </div>
+  </div>
+  <div class="scroll-hint">scroll</div>
+</section>
+
+<div class="overview">
+  <div class="ov-item"><div class="ov-num">17</div><div class="ov-label">Days</div></div>
+  <div class="ov-item"><div class="ov-num">7</div><div class="ov-label">Stops</div></div>
+  <div class="ov-item"><div class="ov-num">5+</div><div class="ov-label">Hikes</div></div>
+  <div class="ov-item"><div class="ov-num">1</div><div class="ov-label">Ferry crossing</div></div>
+</div>
+
+<div class="stops">
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">01 · May 23–24</div>
+      <h2 class="stop-name">Nikko<em>日光 · 2 nights</em></h2>
+      <div class="stop-dates">Tochigi Prefecture · Train from Tokyo</div>
+      <p class="stop-desc">The perfect opening act — ornate UNESCO shrines deep in the mountains, then a full day in the highlands. Fly into Tokyo, train straight here.</p>
+      <ul class="activities"><li>Tōshō-gū Shrine complex — lavish Edo-period mausoleum</li><li>Senjogahara Marshlands — easy boardwalk hike</li><li>Mt. Nantai option for a serious climb (6 hrs)</li><li>Soak in a mountain onsen after the hike</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Nikko_Tosho-gu_Yomeimon_gate.jpg/1280px-Nikko_Tosho-gu_Yomeimon_gate.jpg" alt="Tōshō-gū Shrine" loading="lazy"><div class="photo-label">Tōshō-gū Shrine</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Shinkyo_bridge_Nikko.jpg/1280px-Shinkyo_bridge_Nikko.jpg" alt="Shinkyo Bridge" loading="lazy"><div class="photo-label">Shinkyo Bridge</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Kegon_falls.jpg/800px-Kegon_falls.jpg" alt="Kegon Falls" loading="lazy"><div class="photo-label">Kegon Falls</div></div>
+    </div></div>
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">02 · May 25–27</div>
+      <h2 class="stop-name">Sendai &amp; Matsushima<em>松島 · 3 nights</em></h2>
+      <div class="stop-dates">Miyagi Prefecture · Shinkansen north</div>
+      <p class="stop-desc">One of Japan's three great views — 260 pine-covered islands across a calm bay. Sendai is a real northern city with a great food scene.</p>
+      <ul class="activities"><li>Matsushima boat cruise between the islands</li><li>Walk the coastal temple trail on Oshima island</li><li>Gyutan (beef tongue) dinner in Sendai</li><li>Zuihō-den mausoleum &amp; Date Masamune history</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Matsushima_April_2019.jpg/1280px-Matsushima_April_2019.jpg" alt="Matsushima Bay" loading="lazy"><div class="photo-label">Matsushima Bay</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Matsushima_Godaido.jpg/1280px-Matsushima_Godaido.jpg" alt="Godai-dō Temple" loading="lazy"><div class="photo-label">Godai-dō Temple</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Zuihoden_Main_Hall_2.jpg/1280px-Zuihoden_Main_Hall_2.jpg" alt="Zuihō-den, Sendai" loading="lazy"><div class="photo-label">Zuihō-den, Sendai</div></div>
+    </div></div>
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">03 · May 28–29</div>
+      <h2 class="stop-name">Sanriku Coast<em>三陸 · 2 nights</em></h2>
+      <div class="stop-dates">Iwate Prefecture · Local train east</div>
+      <p class="stop-desc">The rugged Pacific coastline of Tohoku — rebuilt after 2011, and all the more moving for it. Sea cliffs, fishing villages, and one of Japan's most beautiful beaches.</p>
+      <ul class="activities"><li>Jodogahama Beach — white volcanic rocks, electric-blue water</li><li>Blue cave boat tour from the beach</li><li>Michinoku Coastal Trail — hike a scenic section</li><li>Sanriku Railway ride through fishing villages</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Jodogahama_beach01s3200.jpg/1280px-Jodogahama_beach01s3200.jpg" alt="Jodogahama Beach" loading="lazy"><div class="photo-label">Jodogahama Beach</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Sanriku_Coast_Iwate.jpg/1280px-Sanriku_Coast_Iwate.jpg" alt="Michinoku Trail" loading="lazy"><div class="photo-label">Michinoku Trail</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Goishi_Coast_Ofunato_Iwate.jpg/1280px-Goishi_Coast_Ofunato_Iwate.jpg" alt="Goishi Coast" loading="lazy"><div class="photo-label">Goishi Coast</div></div>
+    </div></div>
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">04 · May 30–Jun 1</div>
+      <h2 class="stop-name">Aomori<em>青森 · 3 nights</em></h2>
+      <div class="stop-dates">Aomori Prefecture · Shinkansen north</div>
+      <p class="stop-desc">The wild tip of Honshu. Three days for one of Japan's most spectacular gorge walks, a volcanic summit, and a world-class festival museum.</p>
+      <ul class="activities"><li>Oirase Gorge — 14km riverside walk, waterfalls, old-growth forest</li><li>Mt. Iwaki hike — the 'Fuji of Tsugaru' (6 hrs return)</li><li>Hirosaki Castle &amp; park</li><li>WA·RASSE Nebuta Museum — giant illuminated festival floats</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Oirase_Gorge_Aomori_Japan.jpg/1280px-Oirase_Gorge_Aomori_Japan.jpg" alt="Oirase Gorge" loading="lazy"><div class="photo-label">Oirase Gorge</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Nebuta_2019_14.jpg/1280px-Nebuta_2019_14.jpg" alt="Nebuta Festival" loading="lazy"><div class="photo-label">Nebuta Festival</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Hirosaki_Castle_Cherry_Blossoms_2.jpg/1280px-Hirosaki_Castle_Cherry_Blossoms_2.jpg" alt="Hirosaki Castle" loading="lazy"><div class="photo-label">Hirosaki Castle</div></div>
+    </div></div>
+</div>
+<div class="divider"><p>Crossing the Tsugaru Strait by ferry</p><small>Aomori → Hakodate · approx. 3.5 hours · watch for dolphins</small></div>
+<div class="stops">
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">05 · Jun 2–3</div>
+      <h2 class="stop-name">Hakodate<em>函館 · 2 nights</em></h2>
+      <div class="stop-dates">Hokkaido · Ferry from Aomori</div>
+      <p class="stop-desc">A port city unlike anywhere else in Japan — colonial churches, a harbour of old warehouses, and what might be the country's most famous night view.</p>
+      <ul class="activities"><li>Mt. Hakodate night panorama by ropeway</li><li>Hakodate Morning Market — fresh uni, squid, crab</li><li>Motomachi colonial quarter — consulates, churches</li><li>Goryokaku star fort &amp; tower</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Hakodate_night_view01s3200.jpg/1280px-Hakodate_night_view01s3200.jpg" alt="Night Panorama" loading="lazy"><div class="photo-label">Night Panorama</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/HakodateMotomachi01.JPG/1280px-HakodateMotomachi01.JPG" alt="Motomachi Quarter" loading="lazy"><div class="photo-label">Motomachi Quarter</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Goryokaku_Tower_and_Fort.jpg/1280px-Goryokaku_Tower_and_Fort.jpg" alt="Goryokaku Fort" loading="lazy"><div class="photo-label">Goryokaku Fort</div></div>
+    </div></div>
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">06 · Jun 4–6</div>
+      <h2 class="stop-name">Daisetsuzan<em>大雪山 · 3 nights</em></h2>
+      <div class="stop-dates">Central Hokkaido · Train + bus</div>
+      <p class="stop-desc">The wild heart of Hokkaido — Japan's largest national park. Volcanic peaks, basalt gorges, steaming onsen, and early alpine flowers. The trip's hiking climax.</p>
+      <ul class="activities"><li>Mt. Asahidake summit attempt — Hokkaido's highest peak (2,291m)</li><li>Asahidake Ropeway to the volcanic vent fields</li><li>Sounkyo Gorge trail — waterfalls, basalt cliffs</li><li>Mountain onsen lodge recovery day</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Asahidake_2011.jpg/1280px-Asahidake_2011.jpg" alt="Mt. Asahidake" loading="lazy"><div class="photo-label">Mt. Asahidake</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Sounkyo_gorge_Hokkaido_Japan.jpg/1280px-Sounkyo_gorge_Hokkaido_Japan.jpg" alt="Sounkyo Gorge" loading="lazy"><div class="photo-label">Sounkyo Gorge</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Daisetsuzan_alpine_flowers.jpg/1280px-Daisetsuzan_alpine_flowers.jpg" alt="Alpine Wildflowers" loading="lazy"><div class="photo-label">Alpine Wildflowers</div></div>
+    </div></div>
+<div class="stop"><div class="stop-text">
+      <div class="stop-num">07 · Jun 7–9</div>
+      <h2 class="stop-name">Tokyo<em>東京 · 3 nights · departure</em></h2>
+      <div class="stop-dates">Shinkansen back south</div>
+      <p class="stop-desc">The trip ends where Japan always surprises — the city. No obligations, no schedule. Good food, a neighbourhood you haven't explored, and a slow departure.</p>
+      <ul class="activities"><li>Decompress — no agenda required</li><li>Revisit a favourite neighbourhood or find a new one</li><li>Final ramen, sushi, izakaya crawl</li><li>Easy airport transfer from anywhere in the city</li></ul>
+    </div><div class="stop-photos">
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg/1280px-Skyscrapers_of_Shinjuku_2009_January.jpg" alt="Shinjuku Skyline" loading="lazy"><div class="photo-label">Shinjuku Skyline</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Asakusa_Senso-ji_2019-06-07.jpg/1280px-Asakusa_Senso-ji_2019-06-07.jpg" alt="Senso-ji, Asakusa" loading="lazy"><div class="photo-label">Senso-ji, Asakusa</div></div>
+      <div class="photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Shibuya_Night_%28revised%29.jpg/1280px-Shibuya_Night_%28revised%29.jpg" alt="Shibuya Crossing" loading="lazy"><div class="photo-label">Shibuya Crossing</div></div>
+    </div></div>
+</div>
+
+<footer>
+  <strong>Japan — Heading North</strong>
+  May 23 – June 9, 2026 &nbsp;·&nbsp; Nikko → Sendai → Sanriku → Aomori → Hakodate → Daisetsuzan → Tokyo
+</footer>
+
+<script>
+  const stops = document.querySelectorAll('.stop');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);} });
+  }, {threshold:0.1});
+  stops.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
