@@ -361,13 +361,13 @@ app.delete('/api/:wall/:id', requireAdmin, (req, res) => {
 
 // GET imgcache status (admin only) — shows which Japan page images cached OK vs missing
 const JAPAN_IMAGES = [
-  'Nikko_Tosho-gu_Yomeimon_gate.jpg','Shinkyo_bridge_Nikko.jpg','Kegon_falls.jpg',
-  'Matsushima_April_2019.jpg','Matsushima_Godaido.jpg','Zuihoden_Main_Hall_2.jpg',
-  'Jodogahama_beach01s3200.jpg','Jodogahama_Beach_(51969977762).jpg','Anatoshi-iso_Rock_2023.jpg',
-  'Oirase_keiryuu.JPG','Nebuta_2019_14.jpg','Hirosaki_Castle_(Hirosaki,_Japan).jpg',
-  'Hakodate_night_view01s3200.jpg','HakodateMotomachi01.JPG','Hakodate_Goryokaku_Panorama_1.JPG',
-  'Asahidake_onsen.JPG','Sounkyo_gorge_Hokkaido_Japan.jpg','140724_Asahi-dake_Hokkaido_Japan01s3.jpg',
-  'Skyscrapers_of_Shinjuku_2009_January.jpg','Asakusa_Senso-ji_2019-06-07.jpg','Shibuya_Night_(revised).jpg',
+  'Nikko_Tosho-gu_Yomeimon_Gate.jpg','Shinkyo_Bridge_and_Daiyagawa_River_2.JPG','Kegon_falls.jpg',
+  'Matsushima_miyagi_z.JPG','211030_Godaido_Zuigan-ji_Matsushima_Miyagi_pref_Japan05s3.jpg','Zuiho-den18s3200.jpg',
+  'Jodogahama_Beach_(51971050948).jpg','Jodogahama_Beach_(51969977762).jpg','Anatoshi-iso_Rock_2023.jpg',
+  'Oirase_keiryuu.JPG','Asamushi_Onsen_Nebuta_Matsuri_Aomori_Japan01s3.jpg','Hirosaki_Castle_(Hirosaki,_Japan).jpg',
+  'Hakodate_night-View.JPG','Motomachi_Catholic_Church_in_winter.jpg','Hakodate_Goryokaku_Panorama_1.JPG',
+  'Asahidake_onsen.JPG','Sounkyo-gorge.jpg','140724_Asahi-dake_Hokkaido_Japan01s3.jpg',
+  'Skyscrapers_of_Shinjuku_2009_January.jpg','Sensoji_Temple.JPG','Shibuya_at_night.JPG',
 ];
 app.get('/api/imgcache-status', requireAdmin, (req, res) => {
   const cached = fs.existsSync(IMGCACHE_DIR) ? fs.readdirSync(IMGCACHE_DIR) : [];
