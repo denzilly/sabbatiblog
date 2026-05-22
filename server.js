@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const sharp = require('sharp');
@@ -64,7 +65,11 @@ const uploadFile = multer({
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const SESSION_DIR = path.join(__dirname, 'uploads/sessions');
+fs.mkdirSync(SESSION_DIR, { recursive: true });
+
 app.use(session({
+  store: new FileStore({ path: SESSION_DIR, ttl: 7 * 24 * 60 * 60, retries: 1, logFn: () => {} }),
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
