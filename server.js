@@ -118,6 +118,42 @@ app.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
+// ── Image cache proxy ─────────────────────────────────────────────────────────
+// Downloads Wikimedia Commons images on first request, caches to persistent volume.
+// Browsers fetch from /imgcache/FILENAME — no hotlink issues.
+
+const IMGCACHE_DIR = path.join(__dirname, 'uploads/imgcache');
+fs.mkdirSync(IMGCACHE_DIR, { recursive: true });
+
+app.get('/imgcache/:filename', requirePhotos, async (req, res) => {
+  const filename = path.basename(req.params.filename);
+  const cachePath = path.join(IMGCACHE_DIR, filename);
+
+  if (fs.existsSync(cachePath)) {
+    return res.sendFile(cachePath);
+  }
+
+  const wikiUrl = `https://commons.wikimedia.org/wiki/Special:Redirect/file/${encodeURIComponent(filename)}?width=1200`;
+  try {
+    const upstream = await fetch(wikiUrl, {
+      redirect: 'follow',
+      headers: { 'User-Agent': 'SabbatiBlog/1.0 (+https://github.com/denzilly/sabbatiblog)' },
+    });
+    if (!upstream.ok) {
+      console.error(`imgcache: upstream ${upstream.status} for ${filename}`);
+      return res.status(404).send('Image not available');
+    }
+    const buf = Buffer.from(await upstream.arrayBuffer());
+    fs.writeFileSync(cachePath, buf);
+    res.setHeader('Content-Type', upstream.headers.get('content-type') || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.send(buf);
+  } catch (err) {
+    console.error(`imgcache: fetch failed for ${filename}:`, err.message);
+    res.status(502).send('Could not fetch image');
+  }
+});
+
 // ── Protected static files ────────────────────────────────────────────────────
 
 // Blog images (requireBlog) must be before the broader /uploads handler
