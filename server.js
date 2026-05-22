@@ -359,6 +359,22 @@ app.delete('/api/:wall/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
+// GET imgcache status (admin only) — shows which Japan page images cached OK vs missing
+const JAPAN_IMAGES = [
+  'Nikko_Tosho-gu_Yomeimon_gate.jpg','Shinkyo_bridge_Nikko.jpg','Kegon_falls.jpg',
+  'Matsushima_April_2019.jpg','Matsushima_Godaido.jpg','Zuihoden_Main_Hall_2.jpg',
+  'Jodogahama_beach01s3200.jpg','Jodogahama_Beach_(51969977762).jpg','Anatoshi-iso_Rock_2023.jpg',
+  'Oirase_keiryuu.JPG','Nebuta_2019_14.jpg','Hirosaki_Castle_(Hirosaki,_Japan).jpg',
+  'Hakodate_night_view01s3200.jpg','HakodateMotomachi01.JPG','Hakodate_Goryokaku_Panorama_1.JPG',
+  'Asahidake_onsen.JPG','Sounkyo_gorge_Hokkaido_Japan.jpg','140724_Asahi-dake_Hokkaido_Japan01s3.jpg',
+  'Skyscrapers_of_Shinjuku_2009_January.jpg','Asakusa_Senso-ji_2019-06-07.jpg','Shibuya_Night_(revised).jpg',
+];
+app.get('/api/imgcache-status', requireAdmin, (req, res) => {
+  const cached = fs.existsSync(IMGCACHE_DIR) ? fs.readdirSync(IMGCACHE_DIR) : [];
+  const status = JAPAN_IMAGES.map(f => ({ file: f, cached: cached.includes(f) }));
+  res.json({ cached: cached.length, total: JAPAN_IMAGES.length, files: status });
+});
+
 // GET list uploaded files (admin only)
 app.get('/api/files', requireAdmin, (req, res) => {
   const dir = path.join(__dirname, 'uploads/files');
