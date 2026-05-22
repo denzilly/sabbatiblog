@@ -69,11 +69,11 @@ const SESSION_DIR = path.join(__dirname, 'uploads/sessions');
 fs.mkdirSync(SESSION_DIR, { recursive: true });
 
 app.use(session({
-  store: new FileStore({ path: SESSION_DIR, ttl: 7 * 24 * 60 * 60, retries: 1, logFn: () => {} }),
+  store: new FileStore({ path: SESSION_DIR, ttl: 30 * 24 * 60 * 60, retries: 1, logFn: () => {} }),
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }, // 7 days
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
 }));
 
 // ── Auth middleware ───────────────────────────────────────────────────────────
