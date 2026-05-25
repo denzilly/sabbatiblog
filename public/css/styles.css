@@ -387,5 +387,13 @@ body {
   }
 
   .nav { padding: 0 1rem; }
+  .nav-links {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
   .page-content { padding: 2.5rem 1rem 4rem; }
 }
