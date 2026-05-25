@@ -101,26 +101,184 @@
     }
 
     @media (max-width: 600px) {
-      .foodmap-city-header {
-        padding: 2.5rem 1rem 1.5rem;
-      }
-
-      .foodmap-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .food-info {
-        padding: 0.6rem 0.75rem 0.75rem;
-      }
-
-      .food-name {
-        font-size: 0.95rem;
-      }
-
-      .food-desc {
-        font-size: 0.55rem;
-      }
+      .foodmap-city-header { padding: 2.5rem 1rem 1.5rem; }
+      .foodmap-grid { grid-template-columns: repeat(2, 1fr); }
+      .food-info { padding: 0.6rem 0.75rem 0.75rem; }
+      .food-name { font-size: 0.95rem; }
+      .food-desc { font-size: 0.55rem; }
     }
+
+    /* ── Ratings display ── */
+    .food-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.35rem;
+      flex-wrap: wrap;
+    }
+    .stars { letter-spacing: 0.05em; font-size: 0.7rem; }
+    .s-full { color: var(--accent); }
+    .s-empty { color: rgba(245,240,232,0.15); }
+    .s-half {
+      background: linear-gradient(to right, var(--accent) 50%, rgba(245,240,232,0.15) 50%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .food-comment {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .food-tried {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    /* ── Eaten badge on image ── */
+    .food-eaten .food-img-wrap::after {
+      content: '✓';
+      position: absolute;
+      top: 0.4rem; right: 0.4rem;
+      width: 1.2rem; height: 1.2rem;
+      background: var(--accent);
+      color: var(--ink);
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2rem;
+      text-align: center;
+    }
+
+    /* ── Edit button ── */
+    .food-edit-btn {
+      position: absolute;
+      bottom: 0.4rem; right: 0.4rem;
+      background: rgba(15,13,11,0.7);
+      border: 1px solid rgba(245,240,232,0.15);
+      color: rgba(245,240,232,0.5);
+      border-radius: 4px;
+      width: 1.6rem; height: 1.6rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s, color 0.15s;
+      z-index: 2;
+    }
+    .food-card:hover .food-edit-btn,
+    .food-edit-btn:focus { opacity: 1; }
+    .food-edit-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Edit overlay ── */
+    .food-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,13,11,0.93);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+    .fo-inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .fo-eaten {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.7);
+      cursor: pointer;
+    }
+    .fo-eaten input { accent-color: var(--accent); cursor: pointer; }
+    .fo-stars-wrap { transition: opacity 0.2s; }
+
+    /* Star picker */
+    .star-picker { display: flex; gap: 1px; }
+    .sp-star {
+      position: relative;
+      width: 1.3rem; height: 1.3rem;
+      cursor: pointer;
+    }
+    .sp-star::before {
+      content: '★';
+      position: absolute;
+      inset: 0;
+      font-size: 1.3rem;
+      line-height: 1.3rem;
+      color: rgba(245,240,232,0.12);
+      pointer-events: none;
+    }
+    .sp-star.sp-full::before { color: var(--accent); }
+    .sp-star.sp-half::before {
+      background: linear-gradient(to right, var(--accent) 50%, rgba(245,240,232,0.12) 50%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sp-h {
+      position: absolute;
+      top: 0; height: 100%; width: 50%;
+      display: block;
+    }
+    .sp-h:first-child { left: 0; }
+    .sp-h:last-child  { right: 0; }
+
+    .fo-comment {
+      background: rgba(245,240,232,0.06);
+      border: 1px solid rgba(245,240,232,0.12);
+      border-radius: 3px;
+      color: var(--paper);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.35rem 0.5rem;
+      width: 100%;
+      outline: none;
+    }
+    .fo-comment:focus { border-color: var(--accent); }
+    .fo-actions { display: flex; gap: 0.4rem; }
+    .fo-save, .fo-cancel {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      border: 1px solid;
+      cursor: pointer;
+      padding: 0.3rem 0.6rem;
+      transition: background 0.15s;
+    }
+    .fo-save {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--ink);
+      flex: 1;
+    }
+    .fo-save:hover { background: #b8811f; }
+    .fo-cancel {
+      background: transparent;
+      border-color: rgba(245,240,232,0.2);
+      color: rgba(245,240,232,0.4);
+    }
+    .fo-cancel:hover { border-color: rgba(245,240,232,0.5); color: var(--paper); }
   </style>
 </head>
 <body>
@@ -456,5 +614,140 @@
 
   </div>
 
+  <script>
+    (async () => {
+      const [meRes, ratingsRes] = await Promise.all([
+        fetch('/api/me'),
+        fetch('/api/foodmap-ratings'),
+      ]);
+      const { role } = await meRes.json();
+      const ratings  = await ratingsRes.json();
+      const isAdmin  = role === 'admin';
+
+      document.querySelectorAll('.food-card').forEach(card => {
+        const img  = card.querySelector('img');
+        const slug = img.getAttribute('src').split('/').pop().replace(/\.[^.]+$/, '');
+        card.dataset.slug = slug;
+        card._rating = ratings[slug] || {};
+
+        applyRating(card);
+        if (isAdmin) addEditBtn(card);
+      });
+    })();
+
+    function applyRating(card) {
+      const r = card._rating || {};
+      // remove stale display
+      card.querySelector('.food-rating')?.remove();
+      card.classList.toggle('food-eaten', !!r.eaten);
+
+      if (!r.eaten) return;
+
+      const el = document.createElement('div');
+      el.className = 'food-rating';
+
+      if (r.rating) {
+        el.innerHTML = starsHTML(r.rating);
+        if (r.comment) el.insertAdjacentHTML('beforeend',
+          `<span class="food-comment">${r.comment}</span>`);
+      } else {
+        el.innerHTML = '<span class="food-tried">tried</span>';
+      }
+      card.querySelector('.food-info').appendChild(el);
+    }
+
+    function starsHTML(rating) {
+      let s = '<span class="stars">';
+      for (let i = 1; i <= 5; i++) {
+        if (rating >= i)       s += '<span class="s-full">★</span>';
+        else if (rating >= i - 0.5) s += '<span class="s-half">★</span>';
+        else                   s += '<span class="s-empty">★</span>';
+      }
+      return s + '</span>';
+    }
+
+    function addEditBtn(card) {
+      const btn = document.createElement('button');
+      btn.className = 'food-edit-btn';
+      btn.textContent = '✏';
+      btn.addEventListener('click', e => { e.stopPropagation(); toggleOverlay(card); });
+      card.querySelector('.food-img-wrap').appendChild(btn);
+    }
+
+    function toggleOverlay(card) {
+      const existing = card.querySelector('.food-overlay');
+      if (existing) { existing.remove(); return; }
+
+      const r    = card._rating || {};
+      const slug = card.dataset.slug;
+      let selectedRating = r.rating || 0;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'food-overlay';
+      overlay.innerHTML = `
+        <div class="fo-inner">
+          <label class="fo-eaten">
+            <input type="checkbox" ${r.eaten ? 'checked' : ''}> eaten
+          </label>
+          <div class="fo-stars-wrap">
+            <div class="star-picker"></div>
+          </div>
+          <input class="fo-comment" type="text" placeholder="add a note…" value="${r.comment || ''}">
+          <div class="fo-actions">
+            <button class="fo-save">Save</button>
+            <button class="fo-cancel">✕</button>
+          </div>
+        </div>`;
+      card.appendChild(overlay);
+
+      const picker   = overlay.querySelector('.star-picker');
+      const eatenCb  = overlay.querySelector('input[type=checkbox]');
+      const starsWrap = overlay.querySelector('.fo-stars-wrap');
+
+      renderPicker(picker, selectedRating);
+      setStarsOpacity(starsWrap, r.eaten);
+
+      picker.addEventListener('click', e => {
+        const h = e.target.closest('.sp-h');
+        if (!h) return;
+        selectedRating = parseFloat(h.dataset.v);
+        renderPicker(picker, selectedRating);
+      });
+
+      eatenCb.addEventListener('change', () => setStarsOpacity(starsWrap, eatenCb.checked));
+
+      overlay.querySelector('.fo-save').addEventListener('click', async () => {
+        const eaten   = eatenCb.checked;
+        const comment = overlay.querySelector('.fo-comment').value.trim();
+        await fetch(`/api/foodmap-ratings/${slug}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eaten, rating: eaten ? selectedRating : null, comment }),
+        });
+        card._rating = { eaten, rating: eaten ? selectedRating : null, comment };
+        overlay.remove();
+        applyRating(card);
+      });
+
+      overlay.querySelector('.fo-cancel').addEventListener('click', () => overlay.remove());
+    }
+
+    function setStarsOpacity(wrap, on) {
+      wrap.style.opacity      = on ? '1' : '0.3';
+      wrap.style.pointerEvents = on ? '' : 'none';
+    }
+
+    function renderPicker(picker, value) {
+      picker.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('div');
+        star.className = 'sp-star';
+        if (value >= i)       star.classList.add('sp-full');
+        else if (value >= i - 0.5) star.classList.add('sp-half');
+        star.innerHTML = `<i class="sp-h" data-v="${i - 0.5}"></i><i class="sp-h" data-v="${i}"></i>`;
+        picker.appendChild(star);
+      }
+    }
+  </script>
 </body>
 </html>

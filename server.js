@@ -34,13 +34,17 @@ const HASHES = {
 const DATA_DIR = path.join(__dirname, 'uploads/data');
 fs.mkdirSync(DATA_DIR, { recursive: true });
 const DATA = {
-  photos: path.join(DATA_DIR, 'photos.json'),
-  prints: path.join(DATA_DIR, 'prints.json'),
-  posts:  path.join(DATA_DIR, 'posts.json'),
+  photos:  path.join(DATA_DIR, 'photos.json'),
+  prints:  path.join(DATA_DIR, 'prints.json'),
+  posts:   path.join(DATA_DIR, 'posts.json'),
+  ratings: path.join(DATA_DIR, 'foodmap-ratings.json'),
 };
 
 function readData(file) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return []; }
+}
+function readObj(file) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return {}; }
 }
 function writeData(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2));
@@ -176,6 +180,23 @@ app.use(requirePhotos);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── API ───────────────────────────────────────────────────────────────────────
+
+// Session role (lets frontend know if user is admin)
+app.get('/api/me', (req, res) => res.json({ role: req.session.role || null }));
+
+// Food map ratings
+app.get('/api/foodmap-ratings', requirePhotos, (req, res) => res.json(readObj(DATA.ratings)));
+app.patch('/api/foodmap-ratings/:slug', requireAdmin, (req, res) => {
+  const slug = req.params.slug;
+  const { eaten, rating, comment } = req.body;
+  const data = readObj(DATA.ratings);
+  if (!data[slug]) data[slug] = {};
+  if (eaten    !== undefined) data[slug].eaten   = eaten;
+  if (rating   !== undefined) data[slug].rating  = rating;
+  if (comment  !== undefined) data[slug].comment = comment;
+  writeData(DATA.ratings, data);
+  res.json(data[slug]);
+});
 
 // Photos-tier read access
 app.get('/api/photos', (req, res) => res.json(readData(DATA.photos)));
