@@ -125,7 +125,7 @@ app.get('/logout', (req, res) => {
 const IMGCACHE_DIR = path.join(__dirname, 'uploads/imgcache');
 fs.mkdirSync(IMGCACHE_DIR, { recursive: true });
 
-app.get('/imgcache/:filename', requirePhotos, async (req, res) => {
+app.get('/imgcache/:filename', requireAdmin, async (req, res) => {
   const filename = path.basename(req.params.filename);
   const cachePath = path.join(IMGCACHE_DIR, filename);
 
@@ -166,7 +166,7 @@ app.use('/admin',        requireAdmin,  express.static(path.join(__dirname, 'adm
 app.get('/blog',    requireBlog,   (req, res) => res.sendFile(path.join(__dirname, 'public/blog.html')));
 app.get('/prints',  requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/prints.html')));
 app.get('/foodmap', requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/foodmap.html')));
-app.get('/japan',   requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/japan.html')));
+app.get('/japan',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'public/japan.html')));
 app.get('/admin',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'admin/index.html')));
 
 // All remaining routes require at least photos-tier auth
