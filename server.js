@@ -170,7 +170,6 @@ app.use('/admin',        requireAdmin,  express.static(path.join(__dirname, 'adm
 app.get('/blog',    requireBlog,   (req, res) => res.sendFile(path.join(__dirname, 'public/blog.html')));
 app.get('/prints',  requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/prints.html')));
 app.get('/foodmap', requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/foodmap.html')));
-app.get('/japan',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'public/japan.html')));
 app.get('/admin',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'admin/index.html')));
 
 // All remaining routes require at least photos-tier auth
@@ -380,21 +379,6 @@ app.delete('/api/:wall/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
-// GET imgcache status (admin only) — shows which Japan page images cached OK vs missing
-const JAPAN_IMAGES = [
-  'Nikko_Tosho-gu_Yomeimon_Gate.jpg','Shinkyo_Bridge_and_Daiyagawa_River_2.JPG','Kegon_falls.jpg',
-  'Matsushima_miyagi_z.JPG','211030_Godaido_Zuigan-ji_Matsushima_Miyagi_pref_Japan05s3.jpg','Zuiho-den18s3200.jpg',
-  'Jodogahama_Beach_(51971050948).jpg','Jodogahama_Beach_(51969977762).jpg','Anatoshi-iso_Rock_2023.jpg',
-  'Oirase_keiryuu.JPG','Asamushi_Onsen_Nebuta_Matsuri_Aomori_Japan01s3.jpg','Hirosaki_Castle_(Hirosaki,_Japan).jpg',
-  'Hakodate_night-View.JPG','Motomachi_Catholic_Church_in_winter.jpg','Hakodate_Goryokaku_Panorama_1.JPG',
-  'Asahidake_onsen.JPG','Sounkyo-gorge.jpg','140724_Asahi-dake_Hokkaido_Japan01s3.jpg',
-  'Skyscrapers_of_Shinjuku_2009_January.jpg','Sensoji_Temple.JPG','Shibuya_at_night.JPG',
-];
-app.get('/api/imgcache-status', requireAdmin, (req, res) => {
-  const cached = fs.existsSync(IMGCACHE_DIR) ? fs.readdirSync(IMGCACHE_DIR) : [];
-  const status = JAPAN_IMAGES.map(f => ({ file: f, cached: cached.includes(f) }));
-  res.json({ cached: cached.length, total: JAPAN_IMAGES.length, files: status });
-});
 
 // GET list uploaded files (admin only)
 app.get('/api/files', requireAdmin, (req, res) => {
