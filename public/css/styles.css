@@ -219,7 +219,7 @@ body {
 }
 
 .lightbox-video {
-  width: 100%;
+  width: min(90vw, 1200px);
   aspect-ratio: 16/9;
   max-height: calc(90dvh - 80px);
   border: 0;
