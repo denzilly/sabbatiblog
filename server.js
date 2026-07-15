@@ -40,6 +40,13 @@ const DATA = {
   ratings: path.join(DATA_DIR, 'foodmap-ratings.json'),
 };
 
+function extractYoutubeId(url) {
+  const m = String(url).match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return m ? m[1] : null;
+}
+
 function readData(file) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return []; }
 }
@@ -299,6 +306,29 @@ app.post('/api/upload/:wall', requireAdmin, upload.single('photo'), async (req, 
   }
 });
 
+// POST add YouTube video to wall
+app.post('/api/:wall/youtube', requireAdmin, (req, res) => {
+  const wall = req.params.wall;
+  if (!['photos', 'prints'].includes(wall)) return res.status(400).json({ error: 'Invalid wall' });
+
+  const youtubeId = extractYoutubeId(req.body.url || '');
+  if (!youtubeId) return res.status(400).json({ error: 'Could not parse a YouTube URL' });
+
+  const entry = {
+    id: uuidv4(),
+    type: 'youtube',
+    youtubeId,
+    caption: req.body.caption || '',
+    uploadedAt: new Date().toISOString(),
+  };
+
+  const data = readData(DATA[wall]);
+  data.unshift(entry);
+  writeData(DATA[wall], data);
+
+  res.json(entry);
+});
+
 // POST create blog post
 app.post('/api/posts', requireAdmin, (req, res) => {
   const { title, body } = req.body;
@@ -371,10 +401,12 @@ app.delete('/api/:wall/:id', requireAdmin, (req, res) => {
   const item = data.find(x => x.id === id);
   if (!item) return res.status(404).json({ error: 'Not found' });
 
-  const uploadDir = path.join(__dirname, 'uploads', wall);
-  [path.join(uploadDir, item.filename), path.join(uploadDir, 'thumbs', item.thumb)].forEach(f => {
-    try { fs.unlinkSync(f); } catch {}
-  });
+  if (item.type !== 'youtube') {
+    const uploadDir = path.join(__dirname, 'uploads', wall);
+    [path.join(uploadDir, item.filename), path.join(uploadDir, 'thumbs', item.thumb)].forEach(f => {
+      try { fs.unlinkSync(f); } catch {}
+    });
+  }
 
   writeData(DATA[wall], data.filter(x => x.id !== id));
   res.json({ ok: true });

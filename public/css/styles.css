@@ -135,6 +135,40 @@ body {
   transform: scale(1.03);
 }
 
+.play-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.play-icon span {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(26,24,20,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease;
+}
+
+.photo-item:hover .play-icon span {
+  background: rgba(196,77,42,0.85);
+}
+
+.play-icon span::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 16px;
+  border-color: transparent transparent transparent var(--paper);
+  margin-left: 4px;
+}
+
 .photo-wall-empty {
   grid-column: 1/-1;
   display: flex;
@@ -181,6 +215,14 @@ body {
   max-width: 100%;
   max-height: calc(90dvh - 80px);
   object-fit: contain;
+  display: block;
+}
+
+.lightbox-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  max-height: calc(90dvh - 80px);
+  border: 0;
   display: block;
 }
 

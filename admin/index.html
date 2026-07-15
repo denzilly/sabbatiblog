@@ -504,19 +504,40 @@
     </select>
   </div>
 
-  <div class="dropzone" id="dropzone">
-    <input type="file" id="file-input" accept="image/*" multiple>
-    <p class="dropzone-text">Tap to select photos</p>
-    <div class="dropzone-preview" id="drop-preview"></div>
+  <div class="wall-tabs">
+    <button class="wall-tab media-tab active" data-media="photo">Photo</button>
+    <button class="wall-tab media-tab" data-media="youtube">YouTube</button>
   </div>
 
-  <div class="form-group">
-    <label>Caption <span style="opacity:0.5;font-size:0.55rem">(applies to all selected photos)</span></label>
-    <input type="text" id="upload-caption" placeholder="Optional caption…">
+  <div id="upload-photo-section" class="media-section">
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="file-input" accept="image/*" multiple>
+      <p class="dropzone-text">Tap to select photos</p>
+      <div class="dropzone-preview" id="drop-preview"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Caption <span style="opacity:0.5;font-size:0.55rem">(applies to all selected photos)</span></label>
+      <input type="text" id="upload-caption" placeholder="Optional caption…">
+    </div>
+
+    <button class="btn btn-primary" id="upload-btn" disabled>Upload</button>
+    <div class="upload-progress" id="upload-progress">Uploading…</div>
   </div>
 
-  <button class="btn btn-primary" id="upload-btn" disabled>Upload</button>
-  <div class="upload-progress" id="upload-progress">Uploading…</div>
+  <div id="upload-youtube-section" class="media-section" style="display:none">
+    <div class="form-group">
+      <label>YouTube URL</label>
+      <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=…">
+    </div>
+
+    <div class="form-group">
+      <label>Caption</label>
+      <input type="text" id="youtube-caption" placeholder="Optional caption…">
+    </div>
+
+    <button class="btn btn-primary" id="youtube-btn">Add Video</button>
+  </div>
 </section>
 
 <!-- ── NEW POST TAB ───────────────────────────────────────────────────────── -->

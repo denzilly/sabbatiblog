@@ -85,6 +85,52 @@ uploadBtn.addEventListener('click', async () => {
   }
 });
 
+// ── Upload media-type toggle (Photo / YouTube) ──────────────────────────────────
+document.querySelectorAll('.media-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.media-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('upload-photo-section').style.display   = tab.dataset.media === 'photo'   ? 'block' : 'none';
+    document.getElementById('upload-youtube-section').style.display = tab.dataset.media === 'youtube' ? 'block' : 'none';
+  });
+});
+
+document.getElementById('youtube-btn').addEventListener('click', async () => {
+  const wall    = document.getElementById('upload-wall').value;
+  const url     = document.getElementById('youtube-url').value.trim();
+  const caption = document.getElementById('youtube-caption').value.trim();
+  const fb      = document.getElementById('upload-feedback');
+  const btn     = document.getElementById('youtube-btn');
+
+  if (!url) {
+    showFeedback(fb, 'error', 'Paste a YouTube URL first');
+    return;
+  }
+
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`/api/${wall}/youtube`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, caption }),
+    });
+
+    if (res.ok) {
+      document.getElementById('youtube-url').value = '';
+      document.getElementById('youtube-caption').value = '';
+      showFeedback(fb, 'success', 'Video added');
+    } else {
+      const { error } = await res.json().catch(() => ({}));
+      showFeedback(fb, 'error', error || 'Failed to add video');
+    }
+  } catch {
+    showFeedback(fb, 'error', 'Network error');
+  }
+
+  btn.disabled = false;
+});
+
 // ── New post tab ──────────────────────────────────────────────────────────────
 document.getElementById('post-btn').addEventListener('click', async () => {
   const title = document.getElementById('post-title').value.trim();
@@ -157,12 +203,18 @@ function renderPhotosManage(wall, items) {
     div.className = 'manage-item';
     div.draggable = true;
     div.dataset.id = item.id;
+    const thumbSrc = item.type === 'youtube'
+      ? `https://img.youtube.com/vi/${item.youtubeId}/mqdefault.jpg`
+      : `/uploads/${wall}/thumbs/${item.thumb}`;
+    const meta = item.type === 'youtube'
+      ? `YouTube · ${new Date(item.uploadedAt).toLocaleDateString()}`
+      : new Date(item.uploadedAt).toLocaleDateString();
     div.innerHTML = `
       <div class="drag-handle" title="Drag to reorder">⠿</div>
-      <img class="manage-thumb" src="/uploads/${wall}/thumbs/${item.thumb}" alt="">
+      <img class="manage-thumb" src="${thumbSrc}" alt="">
       <div class="manage-info">
         <div class="manage-caption">${escHtml(item.caption || '(no caption)')}</div>
-        <div class="manage-meta">${new Date(item.uploadedAt).toLocaleDateString()}</div>
+        <div class="manage-meta">${meta}</div>
         <div class="edit-inline" id="edit-${item.id}">
           <input type="text" class="edit-caption-input" value="${escAttr(item.caption || '')}" placeholder="Caption…">
           <div style="display:flex;gap:0.4rem">

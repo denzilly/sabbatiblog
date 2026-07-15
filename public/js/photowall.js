@@ -4,6 +4,7 @@ function initPhotoWall({ wall, el }) {
 
   const lightbox = document.getElementById('lightbox');
   const lbImg    = document.getElementById('lb-img');
+  const lbVideo  = document.getElementById('lb-video');
   const lbCap    = document.getElementById('lb-caption');
   const lbClose  = document.getElementById('lb-close');
   const lbPrev   = document.getElementById('lb-prev');
@@ -12,17 +13,30 @@ function initPhotoWall({ wall, el }) {
   function openLightbox(index) {
     current = index;
     const p = photos[current];
-    lbImg.src = `/uploads/${wall}/${p.filename}`;
-    lbImg.alt = p.caption || '';
+
+    if (p.type === 'youtube') {
+      lbImg.style.display = 'none';
+      lbImg.src = '';
+      lbVideo.style.display = '';
+      lbVideo.src = `https://www.youtube.com/embed/${p.youtubeId}?autoplay=1&rel=0`;
+    } else {
+      lbVideo.style.display = 'none';
+      lbVideo.src = '';
+      lbImg.style.display = '';
+      lbImg.src = `/uploads/${wall}/${p.filename}`;
+      lbImg.alt = p.caption || '';
+    }
+
     lbCap.innerHTML = renderCaption(p.caption || '');
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
-    lbImg.focus();
+    if (p.type !== 'youtube') lbImg.focus();
   }
 
   function closeLightbox() {
     lightbox.classList.remove('open');
     document.body.style.overflow = '';
+    lbVideo.src = ''; // stop playback
   }
 
   function showPrev() {
@@ -79,12 +93,22 @@ function initPhotoWall({ wall, el }) {
       div.setAttribute('aria-label', photo.caption || `Photo ${i + 1}`);
 
       const img = document.createElement('img');
-      img.src = `/uploads/${wall}/thumbs/${photo.thumb}`;
+      img.src = photo.type === 'youtube'
+        ? `https://img.youtube.com/vi/${photo.youtubeId}/mqdefault.jpg`
+        : `/uploads/${wall}/thumbs/${photo.thumb}`;
       img.alt = photo.caption || '';
       img.loading = 'lazy';
       img.decoding = 'async';
 
       div.appendChild(img);
+
+      if (photo.type === 'youtube') {
+        const play = document.createElement('div');
+        play.className = 'play-icon';
+        play.innerHTML = '<span></span>';
+        div.appendChild(play);
+      }
+
       div.addEventListener('click', () => openLightbox(i));
       div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openLightbox(i); });
       el.appendChild(div);
