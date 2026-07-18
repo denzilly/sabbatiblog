@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B — Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .project-item {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .project-item .post-title { transition: color 0.2s; }
+    .project-item:hover .post-title { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav-logo">B</a>
+    <ul class="nav-links">
+      <li><a href="/">Photos</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/prints">3D Prints</a></li>
+      <li><a href="/foodmap">Food Map</a></li>
+      <li><a href="/projects" class="active">Projects</a></li>
+    </ul>
+    <a href="/admin" class="nav-admin-link">admin</a>
+  </nav>
+
+  <main class="page-content">
+    <p class="page-title">Projects</p>
+    <div class="post-list">
+      <a class="post-item project-item" href="https://denzilly.github.io/cyrillic_trainer" target="_blank" rel="noopener">
+        <p class="post-meta">denzilly.github.io/cyrillic_trainer</p>
+        <h2 class="post-title">Cyrillic Trainer</h2>
+      </a>
+      <a class="post-item project-item" href="https://mktmaker.netlify.app" target="_blank" rel="noopener">
+        <p class="post-meta">mktmaker.netlify.app</p>
+        <h2 class="post-title">Market Maker</h2>
+      </a>
+    </div>
+  </main>
+
+</body>
+</html>
