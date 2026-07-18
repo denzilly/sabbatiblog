@@ -129,42 +129,6 @@ app.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
-// ── Image cache proxy ─────────────────────────────────────────────────────────
-// Downloads Wikimedia Commons images on first request, caches to persistent volume.
-// Browsers fetch from /imgcache/FILENAME — no hotlink issues.
-
-const IMGCACHE_DIR = path.join(__dirname, 'uploads/imgcache');
-fs.mkdirSync(IMGCACHE_DIR, { recursive: true });
-
-app.get('/imgcache/:filename', requireAdmin, async (req, res) => {
-  const filename = path.basename(req.params.filename);
-  const cachePath = path.join(IMGCACHE_DIR, filename);
-
-  if (fs.existsSync(cachePath)) {
-    return res.sendFile(cachePath);
-  }
-
-  const wikiUrl = `https://commons.wikimedia.org/wiki/Special:Redirect/file/${encodeURIComponent(filename)}?width=1200`;
-  try {
-    const upstream = await fetch(wikiUrl, {
-      redirect: 'follow',
-      headers: { 'User-Agent': 'SabbatiBlog/1.0 (+https://github.com/denzilly/sabbatiblog)' },
-    });
-    if (!upstream.ok) {
-      console.error(`imgcache: upstream ${upstream.status} for ${filename}`);
-      return res.status(404).send('Image not available');
-    }
-    const buf = Buffer.from(await upstream.arrayBuffer());
-    fs.writeFileSync(cachePath, buf);
-    res.setHeader('Content-Type', upstream.headers.get('content-type') || 'image/jpeg');
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-    res.send(buf);
-  } catch (err) {
-    console.error(`imgcache: fetch failed for ${filename}:`, err.message);
-    res.status(502).send('Could not fetch image');
-  }
-});
-
 // ── Protected static files ────────────────────────────────────────────────────
 
 // Blog images (requireBlog) must be before the broader /uploads handler
@@ -177,7 +141,7 @@ app.use('/admin',        requireAdmin,  express.static(path.join(__dirname, 'adm
 app.get('/blog',    requireBlog,   (req, res) => res.sendFile(path.join(__dirname, 'public/blog.html')));
 app.get('/prints',  requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/prints.html')));
 app.get('/foodmap', requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/foodmap.html')));
-app.get('/japan',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'public/japan.html')));
+app.get('/projects', requirePhotos, (req, res) => res.sendFile(path.join(__dirname, 'public/projects.html')));
 app.get('/admin',   requireAdmin,  (req, res) => res.sendFile(path.join(__dirname, 'admin/index.html')));
 
 // All remaining routes require at least photos-tier auth
@@ -410,22 +374,6 @@ app.delete('/api/:wall/:id', requireAdmin, (req, res) => {
 
   writeData(DATA[wall], data.filter(x => x.id !== id));
   res.json({ ok: true });
-});
-
-// GET imgcache status (admin only) — shows which Japan page images cached OK vs missing
-const JAPAN_IMAGES = [
-  'Nikko_Tosho-gu_Yomeimon_Gate.jpg','Shinkyo_Bridge_and_Daiyagawa_River_2.JPG','Kegon_falls.jpg',
-  'Matsushima_miyagi_z.JPG','211030_Godaido_Zuigan-ji_Matsushima_Miyagi_pref_Japan05s3.jpg','Zuiho-den18s3200.jpg',
-  'Jodogahama_Beach_(51971050948).jpg','Jodogahama_Beach_(51969977762).jpg','Anatoshi-iso_Rock_2023.jpg',
-  'Oirase_keiryuu.JPG','Asamushi_Onsen_Nebuta_Matsuri_Aomori_Japan01s3.jpg','Hirosaki_Castle_(Hirosaki,_Japan).jpg',
-  'Hakodate_night-View.JPG','Motomachi_Catholic_Church_in_winter.jpg','Hakodate_Goryokaku_Panorama_1.JPG',
-  'Asahidake_onsen.JPG','Sounkyo-gorge.jpg','140724_Asahi-dake_Hokkaido_Japan01s3.jpg',
-  'Skyscrapers_of_Shinjuku_2009_January.jpg','Sensoji_Temple.JPG','Shibuya_at_night.JPG',
-];
-app.get('/api/imgcache-status', requireAdmin, (req, res) => {
-  const cached = fs.existsSync(IMGCACHE_DIR) ? fs.readdirSync(IMGCACHE_DIR) : [];
-  const status = JAPAN_IMAGES.map(f => ({ file: f, cached: cached.includes(f) }));
-  res.json({ cached: cached.length, total: JAPAN_IMAGES.length, files: status });
 });
 
 // GET list uploaded files (admin only)
