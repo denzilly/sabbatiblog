@@ -1,0 +1,15 @@
+services:
+  sabbatiblog:
+    build: .
+    container_name: sabbatiblog
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
